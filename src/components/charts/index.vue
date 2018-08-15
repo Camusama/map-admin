@@ -1,13 +1,4 @@
-<!--
-/**
- * @file: index.
- * @intro: intro.
- * @author: zzmhot.
- * @email: zzmhot@163.com.
- * @Date: 2017/7/3 15:55.
- *
- */
--->
+
 <template>
   <div class="charts__panel__warp" v-loading="dataLoading" element-loading-text="玩命加载中..."></div>
 </template>

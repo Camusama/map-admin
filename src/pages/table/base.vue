@@ -123,6 +123,7 @@
 </template>
 <script type="text/javascript">
   import {panelTitle, bottomToolBar} from 'components'
+  import axios from 'axios'
 
   export default{
     data(){
@@ -156,6 +157,7 @@
         }else if(this.searchid === "username"){
           let temp=[]
           this.table_data.forEach((item) => {
+            console.log(item.username)
             if(item.username){
               if(item.username.indexOf(this.searchkey)>=0){
                 temp.push(item)
@@ -192,20 +194,32 @@
       // $fetch.api_table 等于api/index.js
       get_table_data(){
         this.load_data = true
-        this.$fetch.api_table.list({
-          page: this.currentPage,
-          length: this.length
-        })
-          .then((res) => {
-            console.log(res)
-            this.table_data = res.data.result
-            this.currentPage = res.data.page
+        axios.get('/api/user/getList',{
+          params:{
+            page: this.currentPage,
+            length: this.length
+          }
+        }).then((res)=>{
+            this.table_data=res.data.result
+            this.page=res.data.page
             this.total = res.data.total
+            setTimeout(1000)
             this.load_data = false
           })
-          .catch(() => {
-            this.load_data = false
-          })
+        // this.$fetch.api_table.list({
+        //   page: this.currentPage,
+        //   length: this.length
+        // })
+        // .then((res) => {
+        //   console.log(res)
+        //   this.table_data = res.data.result
+        //   this.currentPage = res.data.page
+        //   this.total = res.data.total
+        //   this.load_data = false
+        // })
+        // .catch(() => {
+        //   this.load_data = false
+        // })
       },
       //单个删除
       delete_data(item){

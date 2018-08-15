@@ -7,7 +7,7 @@ module.exports = {
     index: path.resolve(__dirname, '../dist/index.html'),
     assetsRoot: path.resolve(__dirname, '../dist'),
     assetsSubDirectory: 'static',
-    assetsPublicPath: '/',
+    assetsPublicPath: './',
     productionSourceMap: false,
     // Gzip off by default as many popular static hosts such as
     // Surge or Netlify already gzip all static assets for you.
@@ -28,7 +28,15 @@ module.exports = {
     autoOpenBrowser: false,
     assetsSubDirectory: 'static',
     assetsPublicPath: '/',
-    proxyTable: {},
+    proxyTable: {
+      '/api': {
+        target: 'http://localhost:8080/',//设置你调用的接口域名和端口号 别忘了加http
+        changeOrigin: true,
+        pathRewrite: {
+          '^/api': '/'//这里理解成用‘/api’代替target里面的地址，后面组件中我们掉接口时直接用api代替 比如我要调用'http://40.00.100.100:3002/user/add'，直接写‘/api/user/add’即可
+        }
+      }
+    },
     // CSS Sourcemaps off by default because relative paths are "buggy"
     // with this option, according to the CSS-Loader README
     // (https://github.com/webpack/css-loader#sourcemaps)
