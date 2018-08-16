@@ -82,21 +82,21 @@
             path: "/charts/bar"
           }]
         },{
-          title: "地图管理",
-          path: "/charts",
+          title: "地图服务",
+          path: "/map",
           icon: "fa-map",
           child: [{
             title: "路线导航",
-            path: "/charts/bar"
+            path: "/map/road"
           },{
             title: "热点搜索",
-            path: "/charts/bar"
+            path: "/map/hot"
           },{
             title: "行政区划",
-            path: "/charts/bar"
+            path: "/map/area"
           },{
-            title: "行政区划",
-            path: "/charts/bar"
+            title: "地图查看",
+            path: "/map/search"
           }]
         }],
       }

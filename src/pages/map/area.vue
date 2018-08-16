@@ -1,0 +1,54 @@
+<template>
+  <div class="panel">
+    <panel-title :title="$route.meta.title"></panel-title>
+    <div class="panel-body">
+      <baidu-map class="maparea" center="武汉" :zoom="15" :scroll-wheel-zoom="true">
+        <bm-city-list anchor="BMAP_ANCHOR_TOP_LEFT"></bm-city-list>
+        <bm-scale anchor="BMAP_ANCHOR_TOP_RIGHT"></bm-scale>
+        <bm-geolocation anchor="BMAP_ANCHOR_BOTTOM_RIGHT" :showAddressBar="true" :autoLocation="true"></bm-geolocation>
+        <bm-boundary :name="keywordsearch" :strokeWeight="2" strokeColor="blue"></bm-boundary>
+      </baidu-map>
+      <div class="input-wrapper">
+        <el-input
+          class="input ip1"
+          placeholder="请输入行政区划"
+          v-model="keyword"
+          clearable>
+          <el-button slot="append">
+            <i class="fa fa-search" aria-hidden="true"></i>
+          </el-button>
+        </el-input>
+      </div>
+    </div>
+  </div>
+</template>
+<script type="text/javascript">
+  import {panelTitle} from 'components'
+
+  export default{
+    data(){
+      return {
+        Localsearch:"武汉",
+        keywordsearch:"洪山区",
+        keyword:"",
+        Local:""
+      }
+    },
+    components: {
+      panelTitle
+    }
+  }
+</script>
+<style scoped>
+  .maparea {
+    width: 100%;
+    height: 800px;
+  }
+  .input-wrapper{
+    margin-top: 20px;
+  }
+  .ip1{
+    width: 500px;
+  }
+
+</style>

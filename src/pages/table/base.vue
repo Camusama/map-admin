@@ -51,7 +51,7 @@
         >
         </el-table-column>
         <el-table-column
-          prop="sex"
+          prop="sex"n
           label="性别"
           width="120"
         >
@@ -84,7 +84,7 @@
           label="是否管理员"
           width="120">
           <template scope="props">
-            <span v-text="props.row.sex == 1 ? '是' : '否'"></span>
+            <span v-text="props.row.admin == 1 ? '是' : '否'"></span>
           </template>
         </el-table-column>
         <el-table-column
@@ -200,6 +200,7 @@
             length: this.length
           }
         }).then((res)=>{
+            console.log(res)
             this.table_data=res.data.result
             this.page=res.data.page
             this.total = res.data.total

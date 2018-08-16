@@ -20,6 +20,12 @@ import App from './App'
 //导入mock数据
 // import './mock'
 
+import BaiduMap from 'vue-baidu-map'
+
+Vue.use(BaiduMap, {
+  // ak 是在百度地图开发者平台申请的密钥
+  ak: '6YgDBZwDGgopmLbFje1zpiZBfa10pcAl'
+})
 //使用element-ui
 Vue.use(ElementUI)
 

@@ -36,6 +36,11 @@ import saveTableComponent from 'pages/table/save'
 //bar charts
 import barChartsComponent from 'pages/charts/bar'
 
+import mapRoad from 'pages/map/road'
+import mapHot from 'pages/map/hot'
+import mapArea from 'pages/map/area'
+import mapSearch from 'pages/map/search'
+
 Vue.use(VueRouter)
 
 //使用AMD方式加载
@@ -102,6 +107,38 @@ const routes = [{
     meta: {
       title: "柱状图表",
       auth: true
+    }
+  },{
+    path :'/map/road',
+    name:'mapRoad',
+    component:mapRoad,
+    meta:{
+      title:"路线导航",
+      auth:true
+    }
+  },{
+    path:'/map/hot',
+    name:'mapHot',
+    component:mapHot,
+    meta:{
+      title:"热点搜索",
+      auth:true
+    }
+  },{
+    path:'/map/area',
+    name:'mapArea',
+    component:mapArea,
+    meta:{
+      title:"行政区划",
+      auth:true
+    }
+  },{
+    path:'map/search',
+    name:"mapSearch",
+    component:mapSearch,
+    meta:{
+      title:"地图查看",
+      auth:true
     }
   }]
 }]
