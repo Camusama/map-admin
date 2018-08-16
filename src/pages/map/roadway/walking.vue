@@ -2,28 +2,34 @@
   <div class="panel">
     <panel-title :title="$route.meta.title"></panel-title>
     <div class="panel-body">
-      <baidu-map class="map" center="武汉" :zoom="15" :scroll-wheel-zoom="true">
+      <baidu-map class="mapwalk" center="武汉" :zoom="15" :scroll-wheel-zoom="true">
         <bm-city-list anchor="BMAP_ANCHOR_TOP_LEFT"></bm-city-list>
         <bm-scale anchor="BMAP_ANCHOR_TOP_RIGHT"></bm-scale>
         <bm-geolocation anchor="BMAP_ANCHOR_BOTTOM_RIGHT" :showAddressBar="true" :autoLocation="true"></bm-geolocation>
-        <bm-local-search :keyword="keywordsearch" :auto-viewport="true" :location="Localsearch"></bm-local-search>
+        <bm-walking :start=startsearch :end=endsearch :auto-viewport="true" :location=Localsearch></bm-walking>
       </baidu-map>
       <div class="input-wrapper">
         <el-input
           class="input ip1"
-          placeholder="请输入地点"
-          v-model="keyword"
+          placeholder="请输入起点"
+          v-model="startlocal"
           clearable>
-          <el-button slot="append">
+        </el-input>
+        <el-input
+          class="input ip2"
+          placeholder="请输入目的地"
+          v-model="endlocal"
+          clearable>
+          <el-button slot="append" @click="handleSearch">
             <i class="fa fa-search" aria-hidden="true"></i>
           </el-button>
         </el-input>
         <el-input
-          class="input ip2"
+          class="input ip3"
           placeholder="请输入城市"
           v-model="Local"
           clearable>
-          <el-button slot="append">
+          <el-button slot="append" @click="handleLocation">
             <i class="fa fa-search" aria-hidden="true"></i>
           </el-button>
         </el-input>
@@ -37,8 +43,10 @@
     data(){
       return {
         Localsearch:"武汉",
-        keywordsearch:"华中农业大学",
-        keyword:"",
+        startsearch:"",
+        endsearch:"",
+        startlocal:"",
+        endlocal:"",
         Local:""
       }
     },
@@ -48,28 +56,40 @@
     mounted() {
     },
     methods:{
-
+      handleSearch(){
+        this.startsearch =this.startlocal
+        this.endsearch = this.endlocal
+      },
+      handleLocation(){
+        this.Localsearch=this.Local
+      }
     }
   }
 </script>
 <style scoped>
-  .map {
+  .mapwalk {
     width: 100%;
     height: 600px;
   }
   .input-wrapper{
-    height: 550px;
+    height: 600px;
   }
   .ip1{
     float: left;
-    width: 46%;
-    max-width: 500px;
-    margin-right: 20px;
+    width: 20%;
+    max-width: 400px;
+    margin-right: 2px;
     transform: translateY(-40px);
   }
   .ip2{
-    width: 46%;
-    max-width:500px;
+    width: 22%;
+    max-width:430px;
+    margin-right: 20px;
+    float: left;
+    transform: translateY(-40px);
+  }
+  .ip3{
+    max-width:150px;
     float: left;
     transform: translateY(-40px);
   }

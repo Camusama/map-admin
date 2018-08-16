@@ -42,13 +42,14 @@
 <style scoped>
   .maparea {
     width: 100%;
-    height: 800px;
+    height: 750px;
   }
   .input-wrapper{
     margin-top: 20px;
   }
   .ip1{
-    width: 500px;
+
+    max-width: 500px;
   }
 
 </style>
