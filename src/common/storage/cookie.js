@@ -1,14 +1,5 @@
-/**
- * @file: cookie.
- * @intro: cookie存储类.
- * @author: zzmhot.
- * @email: zzmhot@163.com.
- * @Date: 2017/4/28 10:45.
- * @Copyright(©) 2017 by zzmhot.
- *
- */
 
-//存储前缀
+//存前缀
 import {storage_prefix} from 'common/config'
 
 import {tools_verify, tools_uri} from 'common/tools'

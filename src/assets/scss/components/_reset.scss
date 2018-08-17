@@ -20,14 +20,14 @@ i {
 }
 
 img {
-  width: auto;
-  height: auto;
-  max-width: 100% !important;
-  vertical-align: middle;
-  -ms-interpolation-mode: bicubic;
-  &:not([src*="/"]) {
-    display: none !important;
-  }
+  //width: auto;
+  //height: auto;
+  ////max-width: 100% !important;
+  //vertical-align: middle;
+  //-ms-interpolation-mode: bicubic;
+  //&:not([src*="/"]) {
+  //  display: none !important;
+  //}
 }
 
 ol, ul, li {

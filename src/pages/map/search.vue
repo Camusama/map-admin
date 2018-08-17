@@ -14,7 +14,7 @@
           placeholder="请输入地点"
           v-model="keyword"
           clearable>
-          <el-button slot="append">
+          <el-button slot="append" @click="handlekeyword">
             <i class="fa fa-search" aria-hidden="true"></i>
           </el-button>
         </el-input>
@@ -23,7 +23,7 @@
           placeholder="请输入城市"
           v-model="Local"
           clearable>
-          <el-button slot="append">
+          <el-button slot="append" @click="handlelocal">
             <i class="fa fa-search" aria-hidden="true"></i>
           </el-button>
         </el-input>
@@ -36,8 +36,8 @@
   export default{
     data(){
       return {
-        Localsearch:"武汉",
-        keywordsearch:"华中农业大学",
+        Localsearch:"",
+        keywordsearch:"",
         keyword:"",
         Local:""
       }
@@ -48,7 +48,12 @@
     mounted() {
     },
     methods:{
-
+      handlelocal(){
+        this.Localsearch=this.Local
+      },
+      handlekeyword(){
+        this.keywordsearch=this.keyword
+      }
     }
   }
 </script>

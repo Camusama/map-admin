@@ -4,9 +4,10 @@
     <div class="panel-body">
       <baidu-map class="maparea" center="武汉" :zoom="15" :scroll-wheel-zoom="true">
         <bm-city-list anchor="BMAP_ANCHOR_TOP_LEFT"></bm-city-list>
-        <bm-scale anchor="BMAP_ANCHOR_TOP_RIGHT"></bm-scale>
+        <bm-map-type :map-types="['BMAP_NORMAL_MAP', 'BMAP_HYBRID_MAP']" anchor="BMAP_ANCHOR_TOP_RIGHT"></bm-map-type>
+        <bm-scale anchor="BMAP_ANCHOR_BOTTOM_RIGHT"></bm-scale>
         <bm-geolocation anchor="BMAP_ANCHOR_BOTTOM_RIGHT" :showAddressBar="true" :autoLocation="true"></bm-geolocation>
-        <bm-boundary :name="keywordsearch" :strokeWeight="2" strokeColor="blue"></bm-boundary>
+        <bm-boundary :name="keywordsearch" :strokeWeight="2" strokeColor="blue" :auto-viewport="true"></bm-boundary>
       </baidu-map>
       <div class="input-wrapper">
         <el-input
@@ -14,7 +15,7 @@
           placeholder="请输入行政区划"
           v-model="keyword"
           clearable>
-          <el-button slot="append">
+          <el-button slot="append" @click="handlesearch">
             <i class="fa fa-search" aria-hidden="true"></i>
           </el-button>
         </el-input>
@@ -36,6 +37,11 @@
     },
     components: {
       panelTitle
+    },
+    methods:{
+      handlesearch(){
+        this.keywordsearch=this.keyword
+      }
     }
   }
 </script>

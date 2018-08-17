@@ -1,6 +1,5 @@
 <template>
   <div class="panel">
-    <panel-title :title="$route.meta.title"></panel-title>
     <div class="panel-body">
       <baidu-map class="maptransit" center="武汉" :zoom="15" :scroll-wheel-zoom="true">
         <bm-city-list anchor="BMAP_ANCHOR_TOP_LEFT"></bm-city-list>
@@ -74,7 +73,7 @@
     height: 600px;
   }
   .input-wrapper{
-    height: 600px;
+    height: 700px;
   }
   .ip1{
     float: left;

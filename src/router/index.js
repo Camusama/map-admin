@@ -1,15 +1,3 @@
-/**
- * Created by zzmhot on 2017/3/23.
- *
- * 路由Map
- *
- * @author: zzmhot
- * @github: https://github.com/zzmhot
- * @email: zzmhot@163.com
- * @Date: 2017/3/23 18:30
- * @Copyright(©) 2017 by zzmhot.
- *
- */
 
 import Vue from 'vue'
 import VueRouter from 'vue-router'

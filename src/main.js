@@ -18,7 +18,7 @@ import Plugins from 'plugins'
 //导入主视图文件
 import App from './App'
 //导入mock数据
-// import './mock'
+import './mock'
 
 import BaiduMap from 'vue-baidu-map'
 
