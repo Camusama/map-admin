@@ -11,9 +11,6 @@ Mock.mock(new RegExp(port_user.login), ({body}) => {
       msg: "登录成功",
       data: {
         'name': '@cname',
-        'avatar': 'https://avatars0.githubusercontent.com/u/16893554?v=3&s=240',
-        'age|20-25': 20,
-        'desc': '@csentence()'
       }
     })
   } else {

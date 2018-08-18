@@ -55,17 +55,17 @@
           icon: "fa-gears",
           child: [{
             title: "组织机构",
-            path: "/table/base",
+            path: "/table/organization",
             icon: "fa-table",
           }, {
             title: "部门管理",
-            path: "/table/sort"
+            path: "/table/dept"
           },{
             title: "岗位管理",
-            path: "/table/sort"
+            path: "/table/job"
           },{
             title: "人员管理",
-            path: "/table/sort"
+            path: "/table/base"
           },{
             title: "日志管理",
             path: "/table/sort"

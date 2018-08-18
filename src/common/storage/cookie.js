@@ -1,5 +1,4 @@
 
-//存前缀
 import {storage_prefix} from 'common/config'
 
 import {tools_verify, tools_uri} from 'common/tools'

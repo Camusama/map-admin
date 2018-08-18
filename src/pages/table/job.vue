@@ -30,59 +30,24 @@
           width="55">
         </el-table-column>
         <el-table-column
-          prop="person_id"
-          label="id"
+          prop="job_id"
+          label="岗位ID"
           width="80"
           sortable
         >
         </el-table-column>
         <el-table-column
-          prop="username"
-          label="用户名"
+          prop="dept_id"
+          label="部门ID"
           width="120"
           sortable
         >
         </el-table-column>
         <el-table-column
-          prop="realname"
-          label="姓名"
-          width="130"
-          sortable
-        >
-        </el-table-column>
-        <el-table-column
-          prop="gender"
-          label="性别"
-          width="120"
-        >
-        </el-table-column>
-        <el-table-column
-          prop="telephone"
-          label="联系方式"
-          width="177px"
-          sortable
-        >
-        </el-table-column>
-        <el-table-column
-          prop="email"
-          label="E-MAIL"
-          width="250px"
-          sortable
-        >
-        </el-table-column>
-        <el-table-column
-          prop="job_id"
-          label="岗位"
+          prop="job_name"
+          label="工作名称"
           width="400px"
         >
-        </el-table-column>
-        <el-table-column
-          prop="isadmin"
-          label="是否管理员"
-          width="120">
-          <template scope="props">
-            <span v-text="props.row.isadmin == 1 ? '是' : '否'"></span>
-          </template>
         </el-table-column>
         <el-table-column
           label="操作"
@@ -138,6 +103,10 @@
         load_data: true,
         //批量选择数组
         batch_select: []
+      }
+    },
+    wathch:{
+      total(){
       }
     },
     components: {
@@ -204,20 +173,20 @@
 //            setTimeout(1000)
 //            this.load_data = false
 //          })
-         this.$fetch.api_table.list({
-           page: this.currentPage,
-           length: this.length
-         })
-         .then((res) => {
-           console.log(res)
-           this.table_data = res.data.result
-           this.currentPage = res.data.page
-           this.total = res.data.total
-           this.load_data = false
-         })
-         .catch(() => {
-           this.load_data = false
-         })
+        this.$fetch.api_table.list({
+          page: this.currentPage,
+          length: this.length
+        })
+          .then((res) => {
+            console.log(res)
+            this.table_data = res.data.result
+            this.currentPage = res.data.page
+            this.total = res.data.total
+            this.load_data = false
+          })
+          .catch(() => {
+            this.load_data = false
+          })
       },
       //单个删除
       delete_data(item){

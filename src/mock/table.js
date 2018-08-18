@@ -22,14 +22,14 @@ import {port_code, port_table} from 'common/port_uri'
 // 姓名	性别	年龄	生日	地址
 
 const data_list = [{
-  'id|+1': 1,
-  'name': '@cname',
-  'sex': '@pick([1, 2])',//1男，2女
+  'person_id|+1': 1,
+  'realname': '@cname',
+  'gender': '@pick(男,女)',//1男，2女
   'username': '@FIRST',
-  'job': '@pick(武汉市政府办公厅,洪山区税务局,洪山区工商局,洪山区劳动局)@pick(人事部,办公室,财政部)@pick(经理,主任,部长,职员)',
-  'phone':  /^1[385][1-9]\d{8}/,
+  'job_id': '@pick(武汉市政府办公厅,洪山区税务局,洪山区工商局,洪山区劳动局)@pick(人事部,办公室,财政部)@pick(经理,主任,部长,职员)',
+  'telephone':  /^1[385][1-9]\d{8}/,
   'email':'@email',
-  'admin': '@pick([1, 2])'
+  'isadmin': '@pick([0, 1])'
 }]
 
 Mock.mock(new RegExp(port_table.list), ({url}) => {

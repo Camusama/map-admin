@@ -30,7 +30,7 @@
     data(){
       return {
         Localsearch:"武汉",
-        keywordsearch:"洪山区",
+        keywordsearch:"",
         keyword:"",
         Local:""
       }

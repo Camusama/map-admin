@@ -12,9 +12,9 @@
       <div style="width: 30%;margin-bottom: 20px">
         <el-input placeholder="请输入内容" v-model="searchkey" class="input-with-select">
           <el-select v-model="searchid" slot="prepend" placeholder="请选择方式" style="width: 130px;">
-            <el-option label="按用户名查询" value="username"></el-option>
-            <el-option label="按姓名查询" value="name"></el-option>
-            <el-option label="按岗位查询" value="job"></el-option>
+            <el-option label="按部门ID查询" value="deptid"></el-option>
+            <el-option label="按部门名查询" value="name"></el-option>
+            <el-option label="按组织ID查询" value="organame"></el-option>
           </el-select>
           <el-button slot="append" @click="submit_search"><i class="fa fa-search" aria-hidden="true"></i></el-button>
         </el-input>
@@ -31,58 +31,29 @@
         </el-table-column>
         <el-table-column
           prop="person_id"
-          label="id"
-          width="80"
-          sortable
-        >
-        </el-table-column>
-        <el-table-column
-          prop="username"
-          label="用户名"
-          width="120"
-          sortable
-        >
-        </el-table-column>
-        <el-table-column
-          prop="realname"
-          label="姓名"
+          label="部门ID"
           width="130"
           sortable
         >
         </el-table-column>
         <el-table-column
-          prop="gender"
-          label="性别"
-          width="120"
-        >
-        </el-table-column>
-        <el-table-column
-          prop="telephone"
-          label="联系方式"
-          width="177px"
-          sortable
-        >
-        </el-table-column>
-        <el-table-column
-          prop="email"
-          label="E-MAIL"
-          width="250px"
+          prop="person_id"
+          label="组织ID"
+          width="130"
           sortable
         >
         </el-table-column>
         <el-table-column
           prop="job_id"
-          label="岗位"
+          label="部门名称"
           width="400px"
         >
         </el-table-column>
         <el-table-column
-          prop="isadmin"
-          label="是否管理员"
-          width="120">
-          <template scope="props">
-            <span v-text="props.row.isadmin == 1 ? '是' : '否'"></span>
-          </template>
+          prop="job_id"
+          label="组织名称"
+          width="400px"
+        >
         </el-table-column>
         <el-table-column
           label="操作"
@@ -204,20 +175,20 @@
 //            setTimeout(1000)
 //            this.load_data = false
 //          })
-         this.$fetch.api_table.list({
-           page: this.currentPage,
-           length: this.length
-         })
-         .then((res) => {
-           console.log(res)
-           this.table_data = res.data.result
-           this.currentPage = res.data.page
-           this.total = res.data.total
-           this.load_data = false
-         })
-         .catch(() => {
-           this.load_data = false
-         })
+        this.$fetch.api_table.list({
+          page: this.currentPage,
+          length: this.length
+        })
+          .then((res) => {
+            console.log(res)
+            this.table_data = res.data.result
+            this.currentPage = res.data.page
+            this.total = res.data.total
+            this.load_data = false
+          })
+          .catch(() => {
+            this.load_data = false
+          })
       },
       //单个删除
       delete_data(item){

@@ -24,10 +24,14 @@ import saveTableComponent from 'pages/table/save'
 //bar charts
 import barChartsComponent from 'pages/charts/bar'
 
+import Dept from 'pages/table/dept'
+import Job from 'pages/table/job'
+import Organization from 'pages/table/organization'
 import mapRoad from 'pages/map/road'
 import mapHot from 'pages/map/hot'
 import mapArea from 'pages/map/area'
 import mapSearch from 'pages/map/search'
+
 
 Vue.use(VueRouter)
 
@@ -64,7 +68,31 @@ const routes = [{
       title: "基本表格",
       auth: true
     }
+  },{
+    path:'table/dept',
+    name:'tableDept',
+    component:Dept,
+    meta:{
+      title:"部门管理",
+      auth:true
+    }
   }, {
+    path:'table/job',
+    name:'tableJob',
+    component:Job,
+    meta:{
+      title:"岗位管理",
+      auth:true
+    }
+  },{
+    path:'table/organization',
+    name:'tableOrganization',
+    component:Organization,
+    meta:{
+      title:"组织机构",
+      auth:true
+    }
+  },{
     path: '/table/sort',
     name: 'tableSort',
     component: sortTableComponent,

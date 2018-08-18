@@ -36,7 +36,7 @@
             <el-form-item label="是否管理员:" prop="admin">
               <el-radio-group v-model="form.admin">
                 <el-radio :label="1">是</el-radio>
-                <el-radio :label="2">否</el-radio>
+                <el-radio :label="0">否</el-radio>
               </el-radio-group>
             </el-form-item>
             <el-form-item label="岗位:" prop="job">
