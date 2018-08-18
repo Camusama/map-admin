@@ -27,6 +27,10 @@
   import {mapActions} from 'vuex'
   import {port_user, port_code} from 'common/port_uri'
   import {SET_USER_INFO} from 'store/actions/type'
+//  设置记住我
+  import {cookieStorage} from 'common/storage'
+//  user_info: cookieStorage.get('user_info')
+//  cookieStorage.set('user_info', userinfo)
 
   export default{
     data(){
@@ -43,6 +47,9 @@
         load_data: false
       }
     },
+    mounted(){
+      this.getinit()
+    },
     methods: {
       ...mapActions({
         set_user_info: SET_USER_INFO
@@ -53,8 +60,10 @@
           if (!valid) return false
           this.load_data = true
           //登录提交
+          console.log(this.form)
           this.$fetch.api_user.login(this.form)
             .then(({data, msg}) => {
+//              console.log(data,msg)
               this.set_user_info({
                 user: data,
                 login: true
@@ -67,11 +76,14 @@
               if (code === port_code.error) {
                 this.$notify.info({
                   title: '温馨提示',
-                  message: '账号和密码都为：admin'
+                  message: '账号为Yang,密码为：admin'
                 })
               }
             })
         })
+      },
+      getinit(){
+
       }
     }
   }

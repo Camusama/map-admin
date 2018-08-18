@@ -4,7 +4,7 @@
       <el-dropdown trigger="click" class="notification-list">
         <div class="notification-btn">
           <i class="fa fa-user"></i>
-          <span>admin 欢迎登陆</span>
+          <span v-text="get_user_info.user.name"></span>
           <span class="icon"></span>
         </div>
         <el-dropdown-menu slot="dropdown" class="dropdown-menu">

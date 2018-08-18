@@ -6,7 +6,7 @@
         <div slot="header" class="clearfix">
           <i class="fa fa-newspaper-o fa-lg" aria-hidden="true" ></i>
           <span>公告</span>
-          <el-button style="float: right;" @click.stop="on_refresh" size="small">
+          <el-button style="float: right;" @click.stop="on_refreshtips" size="small">
             <i class="fa fa-refresh"></i>
           </el-button>
         </div>
@@ -30,7 +30,7 @@
         <div slot="header" class="clearfix">
           <i class="fa fa-newspaper-o fa-lg" aria-hidden="true" ></i>
           <span>新闻</span>
-          <el-button style="float: right;" @click.stop="on_refresh" size="small">
+          <el-button style="float: right;" @click.stop="on_refreshnews" size="small">
             <i class="fa fa-refresh"></i>
           </el-button>
         </div>
@@ -65,7 +65,9 @@
         tiptotal:15,
         newstotal:15,
         tiplength:10,
-        newslength:10
+        newslength:10,
+        newsList:[],
+        tipList:[]
       }
     },
     components: {
@@ -73,7 +75,10 @@
       bottomToolBar
     },
     methods:{
-      on_refresh(){
+      on_refreshtips(){
+
+      },
+      on_refreshnews(){
 
       },
       get_news(){

@@ -72,14 +72,14 @@
           }]
         }, {
           title: "功能管理",
-          path: "/charts",
+          path: "/monitor",
           icon: "fa-align-justify",
           child: [{
             title: "新闻管理",
-            path: "/charts/bar"
+            path: "/monitor/news"
           },{
             title: "公告管理",
-            path: "/charts/bar"
+            path: "/monitor/tips"
           }]
         },{
           title: "地图服务",

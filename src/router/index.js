@@ -21,17 +21,19 @@ import baseTableComponent from 'pages/table/base'
 import sortTableComponent from 'pages/table/sort'
 //save table
 import saveTableComponent from 'pages/table/save'
-//bar charts
-import barChartsComponent from 'pages/charts/bar'
+
 
 import Dept from 'pages/table/dept'
 import Job from 'pages/table/job'
 import Organization from 'pages/table/organization'
+
 import mapRoad from 'pages/map/road'
 import mapHot from 'pages/map/hot'
 import mapArea from 'pages/map/area'
 import mapSearch from 'pages/map/search'
 
+import News from 'pages/monitor/news'
+import Tips from 'pages/monitor/tips'
 
 Vue.use(VueRouter)
 
@@ -57,7 +59,7 @@ const routes = [{
     name: 'home',
     component: homeComponent,
     meta: {
-      title: "主页",
+      title: "首页",
       auth: true
     }
   }, {
@@ -101,6 +103,23 @@ const routes = [{
       auth: true
     }
   }, {
+    path: '/monitor/news',
+    name: 'monitorNews',
+    component: News,
+    meta: {
+      title: "新闻管理",
+      auth: true
+    }
+  },{
+    path: '/monitor/tips',
+    name: 'monitorTips',
+    component: Tips,
+    meta: {
+      title: "公告管理",
+      auth: true
+    }
+  },
+    {
     path: '/table/update/:id',
     name: 'tableUpdate',
     component: saveTableComponent,
@@ -117,14 +136,6 @@ const routes = [{
       auth: true
     }
   }, {
-    path: '/charts/bar',
-    name: 'chartsBar',
-    component: barChartsComponent,
-    meta: {
-      title: "柱状图表",
-      auth: true
-    }
-  },{
     path :'/map/road',
     name:'mapRoad',
     component:mapRoad,

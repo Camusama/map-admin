@@ -5,12 +5,12 @@ import {port_code, port_user} from 'common/port_uri'
 
 Mock.mock(new RegExp(port_user.login), ({body}) => {
   const {username, password} = JSON.parse(body)
-  if (username === 'admin' && password === 'admin') {
+  if (username === 'Yang' && password === 'admin') {
     return Mock.mock({
       code: port_code.success,
       msg: "登录成功",
       data: {
-        'name': '@cname',
+        'name': username,
       }
     })
   } else {
