@@ -39,7 +39,8 @@
         Localsearch:"",
         keywordsearch:"",
         keyword:"",
-        Local:""
+        Local:"",
+        refresh:true
       }
     },
     components: {
@@ -53,6 +54,11 @@
       },
       handlekeyword(){
         this.keywordsearch=this.keyword
+      },
+      init(){
+        this.$nextTick( () => {
+          this.$router.go(0)
+        })
       }
     }
   }

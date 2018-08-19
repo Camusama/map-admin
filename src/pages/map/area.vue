@@ -7,6 +7,7 @@
         <bm-map-type :map-types="['BMAP_NORMAL_MAP', 'BMAP_HYBRID_MAP']" anchor="BMAP_ANCHOR_TOP_RIGHT"></bm-map-type>
         <bm-scale anchor="BMAP_ANCHOR_BOTTOM_RIGHT"></bm-scale>
         <bm-geolocation anchor="BMAP_ANCHOR_BOTTOM_RIGHT" :showAddressBar="true" :autoLocation="true"></bm-geolocation>
+        <bm-local-search :keyword="keywordsearch" :auto-viewport="true" :location="Localsearch"></bm-local-search>
         <bm-boundary :name="keywordsearch" :strokeWeight="2" strokeColor="blue" :auto-viewport="true"></bm-boundary>
       </baidu-map>
       <div class="input-wrapper">
@@ -49,6 +50,7 @@
   .maparea {
     width: 100%;
     height: 750px;
+    overflow: hidden;
   }
   .input-wrapper{
     margin-top: 20px;

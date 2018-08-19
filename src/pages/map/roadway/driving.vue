@@ -46,6 +46,7 @@
 </template>
 <script type="text/javascript">
   import {panelTitle} from 'components'
+
   export default{
     data(){
       return {
@@ -80,7 +81,6 @@
   .mapdriving {
     width: 100%;
     height: 600px;
-
   }
   .input-wrapper{
     height: 2500px;

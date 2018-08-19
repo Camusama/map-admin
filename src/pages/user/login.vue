@@ -15,6 +15,7 @@
           <el-form-item prop="password" class="login-item">
             <el-input type="password" v-model="form.password" placeholder="请输入账户密码：" class="form-input"></el-input>
           </el-form-item>
+          <el-checkbox v-model="checked" class="checkbox" label="记住我"></el-checkbox>
           <el-form-item class="login-item">
             <el-button size="large" icon="check" class="form-submit" @click="submit_form"></el-button>
           </el-form-item>
@@ -35,6 +36,7 @@
   export default{
     data(){
       return {
+        checked:false,
         form: {
           username: null,
           password: null
@@ -60,15 +62,22 @@
           if (!valid) return false
           this.load_data = true
           //登录提交
+          cookieStorage.set('checked', this.checked)
           console.log(this.form)
           this.$fetch.api_user.login(this.form)
-            .then(({data, msg}) => {
-//              console.log(data,msg)
+            .then(({data}) => {
+              if(this.checked){
+                cookieStorage.set('username', this.form.username)
+                cookieStorage.set('password', this.form.password)
+              }else{
+                cookieStorage.remove("username")
+                cookieStorage.remove("password")
+              }
               this.set_user_info({
                 user: data,
                 login: true
               })
-              this.$message.success(msg)
+              this.$message.success("登录成功")
               setTimeout(this.$router.push({path: '/'}), 500)
             })
             .catch(({code}) => {
@@ -76,14 +85,18 @@
               if (code === port_code.error) {
                 this.$notify.info({
                   title: '温馨提示',
-                  message: '账号为Yang,密码为：admin'
+                  message: '测试账号为Yang,密码为：admin'
                 })
               }
             })
         })
       },
       getinit(){
-
+        this.checked=cookieStorage.get('checked')
+        if(typeof (cookieStorage.get('password'))!="object"&&typeof (cookieStorage.get('password'))!="object"){
+          this.form.username=cookieStorage.get('username')
+          this.form.password=cookieStorage.get('password')
+        }
       }
     }
   }
@@ -99,6 +112,13 @@
     background-repeat: no-repeat;
     background-position: center;
     background-size: cover;
+    .checkbox{
+      margin-bottom: 10px;
+      color:darkgrey;
+    }
+    .checkbox:hover{
+      color:deepskyblue;
+    }
     .loginWarp {
       width: 300px;
       padding: 25px 15px;
