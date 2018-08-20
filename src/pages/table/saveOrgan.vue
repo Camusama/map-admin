@@ -7,11 +7,11 @@
       <el-row>
         <el-col :span="8">
           <el-form ref="form" :model="form" :rules="rules" label-width="100px">
-            <el-form-item label="组织ID:" prop="username">
-              <el-input v-model="form.username" placeholder="请输入内容" style="width: 250px;"></el-input>
+            <el-form-item label="组织ID:" prop="organ_id">
+              <el-input v-model="form.organ_id" placeholder="请输入内容" style="width: 250px;"></el-input>
             </el-form-item>
-            <el-form-item label="组织名称:" prop="name">
-              <el-input v-model="form.name" placeholder="请输入内容" style="width: 250px;"></el-input>
+            <el-form-item label="组织名称:" prop="organ_name">
+              <el-input v-model="form.organ_name" placeholder="请输入内容" style="width: 250px;"></el-input>
             </el-form-item>
             <el-form-item>
               <el-button type="primary" @click="on_submit_form" :loading="on_submit_loading">立即提交</el-button>
@@ -30,15 +30,15 @@
     data(){
       return {
         form: {
-          id:null,
-          name: null,
+          organ_id:null,
+          organ_name: null,
         },
         route_id: this.$route.params.organid,
         load_data: false,
         on_submit_loading: false,
         rules: {
-          name: [{required: true, message: '组织名称不能为空', trigger: 'blur'}]
-          id: [{required: true, message: '组织ID不能为空', trigger: 'blur'}]
+          organ_name: [{required: true, message: '组织名称不能为空', trigger: 'blur'}],
+          organ_id: [{required: true, message: '组织ID不能为空', trigger: 'blur'}]
         }
       }
     },

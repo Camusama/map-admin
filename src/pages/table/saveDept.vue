@@ -7,11 +7,14 @@
       <el-row>
         <el-col :span="8">
           <el-form ref="form" :model="form" :rules="rules" label-width="100px">
-            <el-form-item label="用户名:" prop="username">
-              <el-input v-model="form.username" placeholder="请输入内容" style="width: 250px;"></el-input>
+            <el-form-item label="部门ID:" prop="dept_id">
+              <el-input v-model="form.dept_id" placeholder="请输入内容" style="width: 250px;"></el-input>
             </el-form-item>
-            <el-form-item label="姓名:" prop="name">
-              <el-input v-model="form.name" placeholder="请输入内容" style="width: 250px;"></el-input>
+            <el-form-item label="部门名称:" prop="dept_name">
+              <el-input v-model="form.dept_name" placeholder="请输入内容" style="width: 250px;"></el-input>
+            </el-form-item>
+            <el-form-item label="所属组织:" prop="organ_name">
+              <el-input v-model="form.organ_name" placeholder="请输入内容" style="width: 250px;"></el-input>
             </el-form-item>
             <el-form-item>
               <el-button type="primary" @click="on_submit_form" :loading="on_submit_loading">立即提交</el-button>
@@ -30,19 +33,18 @@
     data(){
       return {
         form: {
-          username:null,
-          name: null,
-          sex: 1,
-          phone: 12345678,
-          job: null,
-          admin:null,
-          email:null
+          dept_id:null,
+          dept_name: null,
+          organ_id: null,
+          organ_name: null,
         },
         route_id: this.$route.params.id,
         load_data: false,
         on_submit_loading: false,
         rules: {
-          name: [{required: true, message: '姓名不能为空', trigger: 'blur'}]
+          dept_name: [{required: true, message: '部门名称不能为空', trigger: 'blur'}],
+          dept_id: [{required: true, message: '部门ID不能为空', trigger: 'blur'}],
+          organ_name: [{required: true, message: '所属组织不能为空', trigger: 'blur'}],
         }
       }
     },

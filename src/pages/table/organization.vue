@@ -4,7 +4,7 @@
       <el-button @click.stop="on_refresh" size="small">
         <i class="fa fa-refresh"></i>
       </el-button>
-      <router-link :to="{name: 'tableAdd'}" tag="span">
+      <router-link :to="{name: 'addOrgan'}" tag="span">
         <el-button type="primary" icon="plus" size="small">添加数据</el-button>
       </router-link>
     </panel-title>
@@ -27,19 +27,19 @@
         @selection-change="on_batch_select">
         <el-table-column
           type="selection"
-          width="55">
+          width="80">
         </el-table-column>
         <el-table-column
           prop="organ_id"
           label="组织ID"
-          width="100"
+          width="200"
           sortable
         >
         </el-table-column>
         <el-table-column
           prop="organ_name"
           label="组织名称"
-          width="400"
+          width="790"
         >
         </el-table-column>
         <el-table-column
@@ -61,7 +61,7 @@
           label="操作"
           width="165">
           <template scope="props">
-            <router-link :to="{name: 'tableUpdate', params: {organid: props.organ_id}}" tag="span">
+            <router-link :to="{name: 'saveOrgan', params: {organid: props.organ_id}}" tag="span">
               <el-button type="info" size="small" icon="edit">修改</el-button>
             </router-link>
             <el-button type="danger" size="small" icon="delete" @click="delete_organ(props.organ_id)">删除</el-button>

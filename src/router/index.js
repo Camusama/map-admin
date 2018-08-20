@@ -26,6 +26,9 @@ import saveTableComponent from 'pages/table/save'
 import Dept from 'pages/table/dept'
 import Job from 'pages/table/job'
 import Organization from 'pages/table/organization'
+import SaveDept from 'pages/table/saveDept'
+import SaveJob from 'pages/table/saveJob'
+import SaveOrgan from 'pages/table/saveOrgan'
 
 import mapRoad from 'pages/map/road'
 import mapHot from 'pages/map/hot'
@@ -34,6 +37,8 @@ import mapSearch from 'pages/map/search'
 
 import News from 'pages/monitor/news'
 import Tips from 'pages/monitor/tips'
+import NewsDetail from 'pages/monitor/newsDetail'
+import TipsDetail from 'pages/monitor/tipsDetail'
 
 Vue.use(VueRouter)
 
@@ -111,11 +116,28 @@ const routes = [{
       auth: true
     }
   },{
+    path: '/monitor/newsDetail/:id',
+    name: 'newsDetail',
+    component: NewsDetail,
+    meta: {
+      title: "新闻详情",
+      auth: true
+    }
+  },
+    {
     path: '/monitor/tips',
     name: 'monitorTips',
     component: Tips,
     meta: {
       title: "公告管理",
+      auth: true
+    }
+  },{
+    path: '/monitor/tipsDetail/:id',
+    name: 'tipsDetail',
+    component: TipsDetail,
+    meta: {
+      title: "公告详情",
       auth: true
     }
   },
@@ -127,15 +149,70 @@ const routes = [{
       title: "数据修改",
       auth: true
     }
-  }, {
-    path: '/table/add',
-    name: 'tableAdd',
-    component: saveTableComponent,
-    meta: {
-      title: "添加数据",
-      auth: true
-    }
-  }, {
+  },{
+      path: '/table/add',
+      name: 'tableAdd',
+      component: saveTableComponent,
+      meta: {
+        title: "添加数据",
+        auth: true
+      }
+    },
+    {
+      path: '/table/saveDept/:dept_id',
+      name: 'saveDept',
+      component: SaveDept,
+      meta: {
+        title: "数据修改",
+        auth: true
+      }
+    },
+    {
+      path: '/table/addDept',
+      name: 'addDept',
+      component: SaveDept,
+      meta: {
+        title: "添加数据",
+        auth: true
+      }
+    },
+    {
+      path: '/table/saveJob/:job_id',
+      name: 'saveJob',
+      component: SaveJob,
+      meta: {
+        title: "数据修改",
+        auth: true
+      }
+    },
+    {
+      path: '/table/addJob',
+      name: 'addJob',
+      component: SaveJob,
+      meta: {
+        title: "添加数据",
+        auth: true
+      }
+    },
+    {
+      path: '/table/saveOrgan/:organ_id',
+      name: 'saveOrgan',
+      component: SaveOrgan,
+      meta: {
+        title: "数据修改",
+        auth: true
+      }
+    },
+    {
+      path: '/table/addOrgan',
+      name: 'addOrgan',
+      component: SaveOrgan,
+      meta: {
+        title: "添加数据",
+        auth: true
+      }
+    },
+    {
     path :'/map/road',
     name:'mapRoad',
     component:mapRoad,

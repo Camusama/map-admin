@@ -7,45 +7,25 @@
       <el-row>
         <el-col :span="8">
           <el-form ref="form" :model="form" :rules="rules" label-width="100px">
-            <el-form-item label="用户名:" prop="username">
-              <el-input v-model="form.username" placeholder="请输入内容" style="width: 250px;"></el-input>
+            <el-form-item label="岗位名称:" prop="username">
+              <el-input v-model="form.job_name" placeholder="请输入内容" style="width: 250px;"></el-input>
             </el-form-item>
-            <el-form-item label="姓名:" prop="name">
-              <el-input v-model="form.name" placeholder="请输入内容" style="width: 250px;"></el-input>
+            <el-form-item label="岗位id:" prop="name">
+              <el-input v-model="form.job_id" placeholder="请输入内容" style="width: 250px;"></el-input>
             </el-form-item>
-            <el-form-item label="性别:">
-              <el-radio-group v-model="form.sex" prop="sex">
-                <el-radio :label="1">男</el-radio>
-                <el-radio :label="2">女</el-radio>
-              </el-radio-group>
-            </el-form-item>
-            <el-form-item label="联系方式:" prop="phone">
+
+            <el-form-item label="所属组织:" prop="phone">
               <el-input
                 placeholder="请输入内容"
-                v-model="form.phone"
+                v-model="form.organ_name"
                 style="width: 250px;">
               </el-input>
             </el-form-item>
-            <el-form-item label="E-MAIL:" prop="email">
+            <el-form-item label="所属部门:" prop="email">
               <el-input
                 placeholder="请输入内容"
-                v-model="form.email"
+                v-model="form.dept_name"
                 style="width: 250px;">
-              </el-input>
-            </el-form-item>
-            <el-form-item label="是否管理员:" prop="admin">
-              <el-radio-group v-model="form.admin">
-                <el-radio :label="1">是</el-radio>
-                <el-radio :label="0">否</el-radio>
-              </el-radio-group>
-            </el-form-item>
-            <el-form-item label="岗位:" prop="job">
-              <el-input
-                placeholder="请输入内容"
-                :controls="false"
-                v-model="form.job"
-                style="width: 300px;"
-              >
               </el-input>
             </el-form-item>
             <el-form-item>
@@ -65,13 +45,12 @@
     data(){
       return {
         form: {
-          username:null,
-          name: null,
-          sex: 1,
-          phone: 12345678,
-          job: null,
-          admin:null,
-          email:null
+          job_name:null,
+          job_id: null,
+          organ_name: null,
+          organ_id:null,
+          dept_name:null,
+          dept_id:null
         },
         route_id: this.$route.params.id,
         load_data: false,

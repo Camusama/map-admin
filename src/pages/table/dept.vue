@@ -4,7 +4,7 @@
       <el-button @click.stop="on_refresh" size="small">
         <i class="fa fa-refresh"></i>
       </el-button>
-      <router-link :to="{name: 'tableAdd'}" tag="span">
+      <router-link :to="{name: 'addDept'}" tag="span">
         <el-button type="primary" icon="plus" size="small">添加数据</el-button>
       </router-link>
     </panel-title>
@@ -39,13 +39,13 @@
         <el-table-column
           prop="dept_name"
           label="部门名称"
-          width="300"
+          width="400"
         >
         </el-table-column>
         <el-table-column
           prop="organ_name"
           label="所属组织"
-          width="300"
+          width="516"
         >
         </el-table-column>
         <el-table-column
@@ -67,7 +67,7 @@
           label="操作"
           width="165">
           <template scope="props">
-            <router-link :to="{name: 'tableUpdate', params: {deptid: props.dept_id}}" tag="span">
+            <router-link :to="{name: 'saveDept', params: {deptid: props.dept_id}}" tag="span">
               <el-button type="info" size="small" icon="edit">修改</el-button>
             </router-link>
             <el-button type="danger" size="small" icon="delete" @click="delete_dept(props.dept_id)">删除</el-button>

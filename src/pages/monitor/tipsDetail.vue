@@ -4,7 +4,7 @@
       <el-button @click.stop="on_refresh" size="small">
         <i class="fa fa-refresh"></i>
       </el-button>
-      <router-link :to="{name: 'addJob'}" tag="span">
+      <router-link :to="{name: 'tableAdd'}" tag="span">
         <el-button type="primary" icon="plus" size="small">添加数据</el-button>
       </router-link>
     </panel-title>
@@ -30,38 +30,68 @@
           width="55">
         </el-table-column>
         <el-table-column
-          prop="job_id"
-          label="岗位ID"
-          width="150"
+          prop="person_id"
+          label="id"
+          width="80"
           sortable
         >
         </el-table-column>
         <el-table-column
-          prop="job_name"
-          label="岗位名称"
-          width="300"
+          prop="username"
+          label="用户名"
+          width="120"
+          sortable
         >
         </el-table-column>
         <el-table-column
-          prop="dept_name"
-          label="所属部门"
-          width="450"
+          prop="realname"
+          label="姓名"
+          width="130"
+          sortable
         >
         </el-table-column>
         <el-table-column
-          prop="organ_name"
-          label="所属组织"
-          width="510"
+          prop="gender"
+          label="性别"
+          width="120"
         >
+        </el-table-column>
+        <el-table-column
+          prop="telephone"
+          label="联系方式"
+          width="177px"
+          sortable
+        >
+        </el-table-column>
+        <el-table-column
+          prop="email"
+          label="E-MAIL"
+          width="250px"
+          sortable
+        >
+        </el-table-column>
+        <el-table-column
+          prop="job_id"
+          label="岗位"
+          width="400px"
+        >
+        </el-table-column>
+        <el-table-column
+          prop="isadmin"
+          label="是否管理员"
+          width="120">
+          <template scope="props">
+            <span v-text="props.row.isadmin == 1 ? '是' : '否'"></span>
+          </template>
         </el-table-column>
         <el-table-column
           label="操作"
-          width="165">
+          width="180">
           <template scope="props">
-            <router-link :to="{name: 'saveJob', params: {jobid: props.job_id}}" tag="span">
+            <router-link :to="{name: 'tableUpdate', params: {id: props.row.id}}" tag="span">
               <el-button type="info" size="small" icon="edit">修改</el-button>
             </router-link>
-            <el-button type="danger" size="small" icon="delete" @click="delete_job(props.job_id)">删除</el-button>
+            <el-button type="danger" size="small" icon="delete" @click="delete_data(props.row)">删除</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -97,6 +127,7 @@
       return {
         searchkey:"",
         searchid:"",
+        table_data: null,
         //当前页码
         currentPage: 1,
         //数据总条目
@@ -104,36 +135,9 @@
         //每页显示多少条数据
         length: 15,
         //请求时的loading效果
-        load_data: false,
+        load_data: true,
         //批量选择数组
-        batch_select: [],
-        // table_data: null,
-        table_data:[
-          {
-            job_id:1,
-            job_name:'职员',
-            dept_name:'财政部',
-            organ_name:'洪山区工商局',
-          },
-          {
-            job_id:2,
-            job_name:'职员',
-            dept_name:'组织部',
-            organ_name:'洪山区工商局',
-          },
-          {
-            job_id:3,
-            job_name:'职员',
-            dept_name:'项目部',
-            organ_name:'洪山区工商局',
-          },
-          {
-            job_id:4,
-            job_name:'处长',
-            dept_name:'财政部',
-            organ_name:'洪山区税务局',
-          }
-        ]
+        batch_select: []
       }
     },
     components: {
@@ -141,7 +145,7 @@
       bottomToolBar,
     },
     created(){
-      // this.get_table_data()
+      this.get_table_data()
     },
     methods: {
       submit_search() {
@@ -186,44 +190,34 @@
       //获取数据
       // $fetch.api_table 等于api/index.js
       get_table_data(){
-        // this.load_data = true
-        // axios.get('/api/user/getList',{
-        //   params:{
-        //     page: this.currentPage,
-        //     length: this.length
-        //   }
-        // }).then((res)=>{
-        //     console.log(res)
-        //     this.table_data=res.data.result
-        //     this.page=res.data.page
-        //     this.total = res.data.total
-        //     setTimeout(1000)
-        //     this.load_data = false
-        //   })
-        //  this.$fetch.api_table.list({
-        //    page: this.currentPage,
-        //    length: this.length
-        //  })
-        //    .then((res) => {
-        //      console.log(res)
-        //      this.table_data = res.data.result
-        //      this.currentPage = res.data.page
-        //      this.total = res.data.total
-        //      this.load_data = false
-        //    })
-        //    .catch(() => {
-        //      this.load_data = false
-        //    })
-      },
-      delete_job(jobid){
-        this.$confirm('此操作将删除该数据, 是否继续?', '提示', {
-          confirmButtonText: '确定',
-          cancelButtonText: '取消',
-          type: 'warning'
+        this.load_data = true
+//        axios.get('/api/user/getList',{
+//          params:{
+//            page: this.currentPage,
+//            length: this.length
+//          }
+//        }).then((res)=>{
+//            console.log(res)
+//            this.table_data=res.data.result
+//            this.page=res.data.page
+//            this.total = res.data.total
+//            setTimeout(1000)
+//            this.load_data = false
+//          })
+        this.$fetch.api_table.list({
+          page: this.currentPage,
+          length: this.length
         })
-          .then(() => {
-
-        })
+          .then((res) => {
+            console.log(res)
+            this.table_data = res.data.result
+            this.currentPage = res.data.page
+            this.total = res.data.total
+            this.load_data = false
+          })
+          .catch(() => {
+            this.load_data = false
+          })
       },
       //单个删除
       delete_data(item){
