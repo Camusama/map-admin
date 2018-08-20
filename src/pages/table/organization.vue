@@ -30,26 +30,39 @@
           width="55">
         </el-table-column>
         <el-table-column
-          prop="person_id"
+          prop="organ_id"
           label="组织ID"
           width="180"
           sortable
         >
         </el-table-column>
         <el-table-column
-          prop="job_id"
+          prop="organ_name"
           label="组织名称"
           width="400px"
         >
         </el-table-column>
         <el-table-column
+          prop="deptlist"
+          label="组织部门"
+          width="400px"
+        >
+          <template slot-scope="scope">
+            <div v-for='v in scope.row.deptlist' style="">
+              <div style="margin: 2px 2px;">
+                {{v.dept_name}}
+                <el-button type="danger" size="small" icon="delete" @click="delete_data(v.dept_id)">删除</el-button>
+              </div>
+            </div>
+          </template>
+        </el-table-column>
+        <el-table-column
           label="操作"
-          width="180">
+          width="100">
           <template scope="props">
             <router-link :to="{name: 'tableUpdate', params: {id: props.row.id}}" tag="span">
               <el-button type="info" size="small" icon="edit">修改</el-button>
             </router-link>
-            <el-button type="danger" size="small" icon="delete" @click="delete_data(props.row)">删除</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -85,7 +98,6 @@
       return {
         searchkey:"",
         searchid:"",
-        table_data: null,
         //当前页码
         currentPage: 1,
         //数据总条目
@@ -93,9 +105,38 @@
         //每页显示多少条数据
         length: 15,
         //请求时的loading效果
-        load_data: true,
+        load_data: false,
         //批量选择数组
-        batch_select: []
+        batch_select: [],
+        // table_data: null,
+        table_data:[
+          {
+            organ_id:1,
+            organ_name:'洪山区工商局',
+            deptlist:[
+              {
+                dept_id:1,
+                dept_name:'财政部'
+              },
+              {
+                dept_id:2,
+                dept_name:'组织部'
+              },
+              {
+                dept_id:3,
+                dept_name:'人事部'
+              },
+              {
+                dept_id:4,
+                dept_name:'项目部'
+              },
+              {
+                dept_id:5,
+                dept_name:'管理部'
+              }
+            ]
+          }
+        ]
       }
     },
     components: {
@@ -103,7 +144,7 @@
       bottomToolBar,
     },
     created(){
-      this.get_table_data()
+      // this.get_table_data()
     },
     methods: {
       submit_search() {
@@ -148,34 +189,34 @@
       //获取数据
       // $fetch.api_table 等于api/index.js
       get_table_data(){
-        this.load_data = true
-//        axios.get('/api/user/getList',{
-//          params:{
-//            page: this.currentPage,
-//            length: this.length
-//          }
-//        }).then((res)=>{
-//            console.log(res)
-//            this.table_data=res.data.result
-//            this.page=res.data.page
-//            this.total = res.data.total
-//            setTimeout(1000)
-//            this.load_data = false
-//          })
-        this.$fetch.api_table.list({
-          page: this.currentPage,
-          length: this.length
-        })
-          .then((res) => {
-            console.log(res)
-            this.table_data = res.data.result
-            this.currentPage = res.data.page
-            this.total = res.data.total
-            this.load_data = false
-          })
-          .catch(() => {
-            this.load_data = false
-          })
+        // this.load_data = true
+       // axios.get('/api/user/getList',{
+       //   params:{
+       //     page: this.currentPage,
+       //     length: this.length
+       //   }
+       // }).then((res)=>{
+       //     console.log(res)
+       //     this.table_data=res.data.result
+       //     this.page=res.data.page
+       //     this.total = res.data.total
+       //     setTimeout(1000)
+       //     this.load_data = false
+       //   })
+       //  this.$fetch.api_table.list({
+       //    page: this.currentPage,
+       //    length: this.length
+       //  })
+       //    .then((res) => {
+       //      console.log(res)
+       //      this.table_data = res.data.result
+       //      this.currentPage = res.data.page
+       //      this.total = res.data.total
+       //      this.load_data = false
+       //    })
+       //    .catch(() => {
+       //      this.load_data = false
+       //    })
       },
       //单个删除
       delete_data(item){
