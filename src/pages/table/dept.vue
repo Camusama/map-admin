@@ -12,9 +12,9 @@
       <div style="width: 30%;margin-bottom: 20px">
         <el-input placeholder="请输入内容" v-model="searchkey" class="input-with-select">
           <el-select v-model="searchid" slot="prepend" placeholder="请选择方式" style="width: 130px;">
-            <el-option label="按部门ID查询" value="deptid"></el-option>
-            <el-option label="按部门名查询" value="name"></el-option>
-            <el-option label="按组织ID查询" value="organame"></el-option>
+            <el-option label="按用户名查询" value="username"></el-option>
+            <el-option label="按姓名查询" value="name"></el-option>
+            <el-option label="按岗位查询" value="job"></el-option>
           </el-select>
           <el-button slot="append" @click="submit_search"><i class="fa fa-search" aria-hidden="true"></i></el-button>
         </el-input>
@@ -30,39 +30,47 @@
           width="55">
         </el-table-column>
         <el-table-column
-          prop="person_id"
+          prop="dept_id"
           label="部门ID"
-          width="130"
+          width="100"
           sortable
         >
         </el-table-column>
         <el-table-column
-          prop="person_id"
-          label="组织ID"
-          width="130"
-          sortable
-        >
-        </el-table-column>
-        <el-table-column
-          prop="job_id"
+          prop="dept_name"
           label="部门名称"
-          width="400px"
+          width="300"
         >
         </el-table-column>
         <el-table-column
-          prop="job_id"
-          label="组织名称"
-          width="400px"
+          prop="organ_name"
+          label="所属组织"
+          width="300"
         >
+        </el-table-column>
+        <el-table-column
+          prop="joblist"
+          label="部门岗位"
+          width="400"
+        >
+          <template slot-scope="scope">
+            <div v-for='v in scope.row.joblist'>
+              <div style="margin-top:4px;display: flex;justify-content:space-between;border-bottom: 1px solid #dfe6ec;
+              padding: 1px 3px;">
+                {{v.job_name}}
+                <el-button plain  size="mini" icon="delete" @click="delete_job(v.job_id,scope.row.dept_id)"></el-button>
+              </div>
+            </div>
+          </template>
         </el-table-column>
         <el-table-column
           label="操作"
-          width="180">
+          width="165">
           <template scope="props">
-            <router-link :to="{name: 'tableUpdate', params: {id: props.row.id}}" tag="span">
+            <router-link :to="{name: 'tableUpdate', params: {deptid: props.dept_id}}" tag="span">
               <el-button type="info" size="small" icon="edit">修改</el-button>
             </router-link>
-            <el-button type="danger" size="small" icon="delete" @click="delete_data(props.row)">删除</el-button>
+            <el-button type="danger" size="small" icon="delete" @click="delete_dept(props.dept_id)">删除</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -98,7 +106,6 @@
       return {
         searchkey:"",
         searchid:"",
-        table_data: null,
         //当前页码
         currentPage: 1,
         //数据总条目
@@ -106,9 +113,105 @@
         //每页显示多少条数据
         length: 15,
         //请求时的loading效果
-        load_data: true,
+        load_data: false,
         //批量选择数组
-        batch_select: []
+        batch_select: [],
+        // table_data: null,
+        table_data:[
+          {
+            dept_id:1,
+            dept_name:'财政部',
+            organ_name:'洪山区工商局',
+            joblist:[
+              {
+                job_id:1,
+                job_name:'主任'
+              },
+              {
+                job_id:2,
+                job_name:'副主任'
+              },
+              {
+                job_id:3,
+                job_name:'官员'
+              },
+              {
+                job_id:4,
+                job_name:'职员'
+              },
+              {
+                job_id:5,
+                job_name:'处长'
+              },
+              {
+                job_id:6,
+                job_name:'副处长'
+              }
+            ]
+          },
+          {
+            dept_id:1,
+            dept_name:'财政部',
+            organ_name:'洪山区工商局',
+            joblist:[
+              {
+                job_id:1,
+                job_name:'主任'
+              },
+              {
+                job_id:2,
+                job_name:'副主任'
+              },
+              {
+                job_id:3,
+                job_name:'官员'
+              },
+              {
+                job_id:4,
+                job_name:'职员'
+              },
+              {
+                job_id:5,
+                job_name:'处长'
+              },
+              {
+                job_id:6,
+                job_name:'副处长'
+              }
+            ]
+          },
+          {
+            dept_id:1,
+            dept_name:'财政部',
+            organ_name:'洪山区工商局',
+            joblist:[
+              {
+                job_id:1,
+                job_name:'主任'
+              },
+              {
+                job_id:2,
+                job_name:'副主任'
+              },
+              {
+                job_id:3,
+                job_name:'官员'
+              },
+              {
+                job_id:4,
+                job_name:'职员'
+              },
+              {
+                job_id:5,
+                job_name:'处长'
+              },
+              {
+                job_id:6,
+                job_name:'副处长'
+              }
+            ]
+          }
+        ]
       }
     },
     components: {
@@ -116,7 +219,7 @@
       bottomToolBar,
     },
     created(){
-      this.get_table_data()
+      // this.get_table_data()
     },
     methods: {
       submit_search() {
@@ -161,34 +264,40 @@
       //获取数据
       // $fetch.api_table 等于api/index.js
       get_table_data(){
-        this.load_data = true
-//        axios.get('/api/user/getList',{
-//          params:{
-//            page: this.currentPage,
-//            length: this.length
-//          }
-//        }).then((res)=>{
-//            console.log(res)
-//            this.table_data=res.data.result
-//            this.page=res.data.page
-//            this.total = res.data.total
-//            setTimeout(1000)
-//            this.load_data = false
-//          })
-        this.$fetch.api_table.list({
-          page: this.currentPage,
-          length: this.length
-        })
-          .then((res) => {
-            console.log(res)
-            this.table_data = res.data.result
-            this.currentPage = res.data.page
-            this.total = res.data.total
-            this.load_data = false
-          })
-          .catch(() => {
-            this.load_data = false
-          })
+        // this.load_data = true
+        // axios.get('/api/user/getList',{
+        //   params:{
+        //     page: this.currentPage,
+        //     length: this.length
+        //   }
+        // }).then((res)=>{
+        //     console.log(res)
+        //     this.table_data=res.data.result
+        //     this.page=res.data.page
+        //     this.total = res.data.total
+        //     setTimeout(1000)
+        //     this.load_data = false
+        //   })
+        //  this.$fetch.api_table.list({
+        //    page: this.currentPage,
+        //    length: this.length
+        //  })
+        //    .then((res) => {
+        //      console.log(res)
+        //      this.table_data = res.data.result
+        //      this.currentPage = res.data.page
+        //      this.total = res.data.total
+        //      this.load_data = false
+        //    })
+        //    .catch(() => {
+        //      this.load_data = false
+        //    })
+      },
+      delete_job(jobid,deptid){
+
+      },
+      delete_dept(deptid){
+
       },
       //单个删除
       delete_data(item){

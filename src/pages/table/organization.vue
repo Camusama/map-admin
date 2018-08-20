@@ -32,37 +32,39 @@
         <el-table-column
           prop="organ_id"
           label="组织ID"
-          width="180"
+          width="100"
           sortable
         >
         </el-table-column>
         <el-table-column
           prop="organ_name"
           label="组织名称"
-          width="400px"
+          width="400"
         >
         </el-table-column>
         <el-table-column
           prop="deptlist"
           label="组织部门"
-          width="400px"
+          width="400"
         >
           <template slot-scope="scope">
-            <div v-for='v in scope.row.deptlist' style="">
-              <div style="margin: 2px 2px;">
+            <div v-for='v in scope.row.deptlist'>
+              <div style="margin-top:4px;display: flex;justify-content:space-between;border-bottom: 1px solid #dfe6ec;
+              padding: 1px 3px;">
                 {{v.dept_name}}
-                <el-button type="danger" size="small" icon="delete" @click="delete_data(v.dept_id)">删除</el-button>
+                <el-button plain  size="mini" icon="delete" @click="delete_dept(v.dept_id,scope.row.organ_id)"></el-button>
               </div>
             </div>
           </template>
         </el-table-column>
         <el-table-column
           label="操作"
-          width="100">
+          width="165">
           <template scope="props">
-            <router-link :to="{name: 'tableUpdate', params: {id: props.row.id}}" tag="span">
+            <router-link :to="{name: 'tableUpdate', params: {organid: props.organ_id}}" tag="span">
               <el-button type="info" size="small" icon="edit">修改</el-button>
             </router-link>
+            <el-button type="danger" size="small" icon="delete" @click="delete_organ(props.organ_id)">删除</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -113,6 +115,58 @@
           {
             organ_id:1,
             organ_name:'洪山区工商局',
+            deptlist:[
+              {
+                dept_id:1,
+                dept_name:'财政部'
+              },
+              {
+                dept_id:2,
+                dept_name:'组织部'
+              },
+              {
+                dept_id:3,
+                dept_name:'人事部'
+              },
+              {
+                dept_id:4,
+                dept_name:'项目部'
+              },
+              {
+                dept_id:5,
+                dept_name:'管理部'
+              }
+            ]
+          },
+          {
+            organ_id:2,
+            organ_name:'洪山区税务局',
+            deptlist:[
+              {
+                dept_id:1,
+                dept_name:'财政部'
+              },
+              {
+                dept_id:2,
+                dept_name:'组织部'
+              },
+              {
+                dept_id:3,
+                dept_name:'人事部'
+              },
+              {
+                dept_id:4,
+                dept_name:'项目部'
+              },
+              {
+                dept_id:5,
+                dept_name:'管理部'
+              }
+            ]
+          },
+          {
+            organ_id:3,
+            organ_name:'武汉市政府办公厅',
             deptlist:[
               {
                 dept_id:1,
@@ -217,6 +271,12 @@
        //    .catch(() => {
        //      this.load_data = false
        //    })
+      },
+      delete_dept(deptid,organid){
+
+      },
+      delete_organ(organid){
+
       },
       //单个删除
       delete_data(item){

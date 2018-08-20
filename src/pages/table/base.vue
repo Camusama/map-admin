@@ -91,7 +91,7 @@
             <router-link :to="{name: 'tableUpdate', params: {id: props.row.id}}" tag="span">
               <el-button type="info" size="small" icon="edit">修改</el-button>
             </router-link>
-            <el-button type="danger" size="small" icon="delete" @click="delete_data(props.row)">删除</el-button>
+            <el-button type="danger" size="small" icon="delete" @click="delete_data(props.row.id)">删除</el-button>
           </template>
         </el-table-column>
       </el-table>
