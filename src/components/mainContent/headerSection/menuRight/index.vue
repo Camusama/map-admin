@@ -4,7 +4,7 @@
       <el-dropdown trigger="click" class="notification-list">
         <div class="notification-btn">
           <i class="fa fa-user"></i>
-          <span v-text="get_user_info.user.name"></span>
+          <span v-text="get_user_info.user.realname"></span>
           <span class="icon"></span>
         </div>
         <el-dropdown-menu slot="dropdown" class="dropdown-menu">
@@ -35,10 +35,12 @@
   import {mapGetters, mapActions} from 'vuex'
   import {GET_USER_INFO} from 'store/getters/type'
   import {SET_USER_INFO} from 'store/actions/type'
+  import axios from 'axios'
 
   const USER_OUT = 0
   const USER_INFO = 1
   const USER_SETTING = 2
+  const url="/api/logserver"
 
   export default{
     computed: {
@@ -56,16 +58,29 @@
           confirmButtonText: '确定',
           cancelButtonText: '取消',
           type: 'warning'
-        }).then(() => {
-          this.$fetch.api_user.logout()
-            .then(({msg}) => {
-              this.$message.success(msg)
-              this.set_user_info(null)
-              setTimeout(this.$router.replace({name: "login"}), 500)
-            })
+        }).then(()=>{
+          axios.get(url,{
+            params:{
+              method:"logout"
+            }
+          }).then((res)=>{
+            this.$message.success(res.data.msg)
+            this.set_user_info(null)
+            setTimeout(this.$router.replace({name: "login"}), 500)
+          })
         }).catch(() => {
 
         })
+        //   .then(() => {
+        //   this.$fetch.api_user.logout()
+        //     .then(({msg}) => {
+        //       this.$message.success(msg)
+        //       this.set_user_info(null)
+        //       setTimeout(this.$router.replace({name: "login"}), 500)
+        //     })
+        // }).catch(() => {
+        //
+        // })
       },
       user_info() {
         //个人信息

@@ -87,7 +87,7 @@
           <el-pagination
             @current-change="handleCurrentChange"
             :current-page="currentPage"
-            :page-size="10"
+            :page-size="length"
             layout="total, prev, pager, next"
             :total="total">
           </el-pagination>
@@ -99,7 +99,7 @@
 <script type="text/javascript">
   import {panelTitle, bottomToolBar} from 'components'
   import axios from 'axios'
-  const url="/api/organ"
+  const url="/api/organserver"
 
   export default{
     data(){
@@ -204,7 +204,7 @@
       bottomToolBar,
     },
     created(){
-      // this.get_table_data()
+      this.get_table_data()
     },
     methods: {
       lengthchange(){
@@ -267,14 +267,14 @@
          this.load_data = true
           axios.get(url,{
           params:{
-            method:"getList",
+            method:"organlist",
             page: this.currentPage,
             length: this.length
           }
         }).then((res)=>{
             console.log(res)
             this.table_data=res.data.result
-            this.page=res.data.page
+            this.currentPage=res.data.page
             this.total = res.data.total
             setTimeout(1000)
             this.load_data = false

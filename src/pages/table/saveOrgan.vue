@@ -8,7 +8,7 @@
         <el-col :span="8">
           <el-form ref="form" :model="form" :rules="rules" label-width="100px">
             <el-form-item label="组织ID:" prop="organ_id">
-              <el-input v-model="form.organ_id" placeholder="请输入内容" style="width: 250px;"></el-input>
+              <el-input :disabled="flag" v-model="form.organ_id" placeholder="请输入内容" style="width: 250px;"></el-input>
             </el-form-item>
             <el-form-item label="组织名称:" prop="organ_name">
               <el-input v-model="form.organ_name" placeholder="请输入内容" style="width: 250px;"></el-input>
@@ -25,10 +25,14 @@
 </template>
 <script type="text/javascript">
   import {panelTitle} from 'components'
+  const url ="/api/organserver"
+  import axios from 'axios'
+
 
   export default{
     data(){
       return {
+        flag:true,
         form: {
           organ_id:null,
           organ_name: null,
@@ -45,13 +49,22 @@
     created(){
       console.log(this.route_id)
       this.route_id && this.get_form_data()
+      if(typeof (this.route_id)==="undefined"){
+        this.flag=false
+      }
     },
     methods: {
       //获取数据
       get_form_data(){
         this.load_data = true
-        this.$fetch.api_table.get({
-          organid: this.route_id
+        // this.$fetch.api_table.get({
+        //   organid: this.route_id
+        // })
+        axios.get(url,{
+          params:{
+            method:"getorgan",
+            organ_id:this.route_id
+          }
         })
           .then(({data}) => {
             this.form = data

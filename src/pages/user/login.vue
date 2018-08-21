@@ -30,8 +30,9 @@
   import {SET_USER_INFO} from 'store/actions/type'
 //  设置记住我
   import {cookieStorage} from 'common/storage'
-//  user_info: cookieStorage.get('user_info')
-//  cookieStorage.set('user_info', userinfo)
+  const url="/api/logserver"
+  import axios from 'axios'
+
 
   export default{
     data(){
@@ -63,32 +64,67 @@
           this.load_data = true
           //登录提交
           cookieStorage.set('checked', this.checked)
-          console.log(this.form)
-          this.$fetch.api_user.login(this.form)
-            .then(({data}) => {
-              if(this.checked){
-                cookieStorage.set('username', this.form.username)
-                cookieStorage.set('password', this.form.password)
-              }else{
-                cookieStorage.remove("username")
-                cookieStorage.remove("password")
-              }
-              this.set_user_info({
-                user: data,
-                login: true
-              })
-              this.$message.success("登录成功")
-              setTimeout(this.$router.push({path: '/'}), 500)
+          axios.get(url,{
+            params:{
+              method:"login",
+              username: this.form.username,
+              password: this.form.password
+            }
+          }).then((res)=>{
+            // console.log(res)
+            if(this.checked){
+              cookieStorage.set('username', this.form.username)
+              cookieStorage.set('password', this.form.password)
+            }else{
+              cookieStorage.remove("username")
+              cookieStorage.remove("password")
+            }
+            this.set_user_info({
+              user: res.data.data,
+              login: true
             })
-            .catch(({code}) => {
-              this.load_data = false
-              if (code === port_code.error) {
-                this.$notify.info({
-                  title: '温馨提示',
-                  message: '测试账号为Yang,密码为：admin'
-                })
-              }
+            this.$message.success("登录成功")
+            setTimeout(this.$router.push({path: '/'}), 500)
+          }).catch((err) => {
+            var message=""
+            if(err.response.status === 404){
+              message="用户名错误！"
+            }else if(err.response.status===403){
+              message="密码不正确！"
+            }
+            this.load_data = false
+            this.$notify.info({
+              title: '温馨提示',
+              message:message,
+              // message: '测试账号为Yang,密码为：admin'
             })
+
+          })
+          // this.$fetch.api_user.login(this.form)
+          //   .then(({data}) => {
+          //     if(this.checked){
+          //       cookieStorage.set('username', this.form.username)
+          //       cookieStorage.set('password', this.form.password)
+          //     }else{
+          //       cookieStorage.remove("username")
+          //       cookieStorage.remove("password")
+          //     }
+          //     this.set_user_info({
+          //       user: data,
+          //       login: true
+          //     })
+          //     this.$message.success("登录成功")
+          //     setTimeout(this.$router.push({path: '/'}), 500)
+          //   })
+          //   .catch(({code}) => {
+          //     this.load_data = false
+          //     if (code === port_code.error) {
+          //       this.$notify.info({
+          //         title: '温馨提示',
+          //         message: '测试账号为Yang,密码为：admin'
+          //       })
+          //     }
+          //   })
         })
       },
       getinit(){
