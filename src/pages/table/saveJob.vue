@@ -45,7 +45,8 @@
 </template>
 <script type="text/javascript">
   import {panelTitle} from 'components'
-
+  import axios from 'axios'
+  const url="/api/user"
   export default{
     data(){
       return {
@@ -122,16 +123,34 @@
         this.$refs.form.validate((valid) => {
           if (!valid) return false
           this.on_submit_loading = true
-          this.$fetch.api_table.save(this.form)
-            .then(({msg}) => {
-              this.$message.success(msg)
-              setTimeout(this.$router.back(), 500)
-            })
-            .catch(() => {
-              this.on_submit_loading = false
-            })
+          axios.get(url, {
+            params: {
+              job_id: this.form.person_id,
+              dept_id: this.form.dept_id,
+              job_name: this.form.job_name
+            }
+          }).then((res) => {
+            console.log(res)
+            this.table_data = res.data.result
+            this.page = res.data.page
+            this.total = res.data.total
+            setTimeout(1000)
+            this.load_data = false
+          })
         })
-      }
+//        this.$refs.form.validate((valid) => {
+//          if (!valid) return false
+//          this.on_submit_loading = true
+//          this.$fetch.api_table.save(this.form)
+//            .then(({msg}) => {
+//              this.$message.success(msg)
+//              setTimeout(this.$router.back(), 500)
+//            })
+//            .catch(() => {
+//              this.on_submit_loading = false
+//            })
+//        })
+      },
     },
     components: {
       panelTitle

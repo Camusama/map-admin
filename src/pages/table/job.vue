@@ -107,7 +107,7 @@
         //数据总条目
         total: 0,
         //每页显示多少条数据
-        length: 15,
+        length: 5,
         //请求时的loading效果
         load_data: false,
         //批量选择数组
@@ -152,8 +152,8 @@
       lengthchange(){
         var  val =this.$refs.iplength.value
         if(parseInt(this.$refs.iplength.value)){
-          if(val>40){
-            this.length=30
+          if(val>20){
+            this.length=20
           }else if(val<3){
             this.length=3
           }else{

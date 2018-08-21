@@ -64,7 +64,7 @@
             <router-link :to="{name: 'saveOrgan', params: {organ_id: props.row.organ_id}}" tag="span">
               <el-button type="info" size="small" icon="edit">修改</el-button>
             </router-link>
-            <el-button type="danger" size="small" icon="delete" @click="delete_organ(props.organ_id)">删除</el-button>
+            <el-button type="danger" size="small" icon="delete" @click="delete_organ(props.row.organ_id)">删除</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -99,6 +99,7 @@
 <script type="text/javascript">
   import {panelTitle, bottomToolBar} from 'components'
   import axios from 'axios'
+  const url="/api/organ"
 
   export default{
     data(){
@@ -110,7 +111,7 @@
         //数据总条目
         total: 0,
         //每页显示多少条数据
-        length: 15,
+        length: 3,
         //请求时的loading效果
         load_data: false,
         //批量选择数组
@@ -209,15 +210,15 @@
       lengthchange(){
         var  val =this.$refs.iplength.value
         if(parseInt(this.$refs.iplength.value)){
-          if(val>40){
-            this.length=30
+          if(val>10){
+            this.length=10
           }else if(val<3){
             this.length=3
           }else{
             this.length=val
           }
         }else{
-          this.length=10
+          this.length=3
         }
         this.get_table_data()
       },
@@ -263,20 +264,21 @@
       //获取数据
       // $fetch.api_table 等于api/index.js
       get_table_data(){
-        // this.load_data = true
-       // axios.get('/api/user/getList',{
-       //   params:{
-       //     page: this.currentPage,
-       //     length: this.length
-       //   }
-       // }).then((res)=>{
-       //     console.log(res)
-       //     this.table_data=res.data.result
-       //     this.page=res.data.page
-       //     this.total = res.data.total
-       //     setTimeout(1000)
-       //     this.load_data = false
-       //   })
+         this.load_data = true
+          axios.get(url,{
+          params:{
+            method:"getList",
+            page: this.currentPage,
+            length: this.length
+          }
+        }).then((res)=>{
+            console.log(res)
+            this.table_data=res.data.result
+            this.page=res.data.page
+            this.total = res.data.total
+            setTimeout(1000)
+            this.load_data = false
+          })
        //  this.$fetch.api_table.list({
        //    page: this.currentPage,
        //    length: this.length
@@ -296,7 +298,18 @@
 
       },
       delete_organ(organid){
-
+        this.load_data = true
+        axios.get(url,{
+          params:{
+            method:"delOrgan",
+            organ_id:organid
+          }
+        }).then((res)=>{
+          console.log(res)
+          this.$message.success(res.msg)
+          setTimeout(1000)
+          this.load_data = false
+        })
       },
       //单个删除
       delete_data(item){
@@ -325,7 +338,9 @@
       },
       //批量选择
       on_batch_select(val){
-        this.batch_select = val
+        val.forEach ((item)=>{
+          this.batch_select.push(item.organ_id)
+        })
       },
       //批量删除
       on_batch_del(){
