@@ -33,7 +33,7 @@
           organ_id:null,
           organ_name: null,
         },
-        route_id: this.$route.params.organid,
+        route_id: this.$route.params.organ_id,
         load_data: false,
         on_submit_loading: false,
         rules: {
@@ -43,6 +43,7 @@
       }
     },
     created(){
+      console.log(this.route_id)
       this.route_id && this.get_form_data()
     },
     methods: {

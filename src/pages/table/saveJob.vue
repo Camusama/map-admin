@@ -13,20 +13,25 @@
             <el-form-item label="岗位id:" prop="name">
               <el-input v-model="form.job_id" placeholder="请输入内容" style="width: 250px;"></el-input>
             </el-form-item>
-
-            <el-form-item label="所属组织:" prop="phone">
-              <el-input
-                placeholder="请输入内容"
-                v-model="form.organ_name"
-                style="width: 250px;">
-              </el-input>
+            <el-form-item label="组织：">
+              <el-select v-model="organ_id" placeholder="请选择">
+                <el-option
+                  v-for="item in organlist"
+                  :key="item.organ_id"
+                  :label="item.organ_name"
+                  :value="item.organ_id">
+                </el-option>
+              </el-select>
             </el-form-item>
-            <el-form-item label="所属部门:" prop="email">
-              <el-input
-                placeholder="请输入内容"
-                v-model="form.dept_name"
-                style="width: 250px;">
-              </el-input>
+            <el-form-item label="部门：">
+              <el-select v-model="dept_id"  placeholder="请选择">
+                <el-option
+                  v-for="item in deptlist"
+                  :key="item.dept_id"
+                  :label="item.dept_name"
+                  :value="item.dept_id">
+                </el-option>
+              </el-select>
             </el-form-item>
             <el-form-item>
               <el-button type="primary" @click="on_submit_form" :loading="on_submit_loading">立即提交</el-button>
@@ -44,6 +49,8 @@
   export default{
     data(){
       return {
+        organ_id:null,
+        dept_id:null,
         form: {
           job_name:null,
           job_id: null,
@@ -52,15 +59,43 @@
           dept_name:null,
           dept_id:null
         },
-        route_id: this.$route.params.id,
+        route_id: this.$route.params.job_id,
         load_data: false,
         on_submit_loading: false,
         rules: {
-          name: [{required: true, message: '姓名不能为空', trigger: 'blur'}]
-        }
+          job_name: [{required: true, message: '岗位名不能为空', trigger: 'blur'}],
+          job_id: [{required: true, message: '岗位名不能为空', trigger: 'blur'}],
+          organ_name: [{required: true, message: '岗位名不能为空', trigger: 'blur'}],
+          dept_name: [{required: true, message: '岗位名不能为空', trigger: 'blur'}],
+        },
+        deptlist:[
+          {
+            dept_id:1,
+            dept_name:"财政部"
+          },{
+            dept_id:2,
+            dept_name:"人事部"
+          },{
+            dept_id:3,
+            dept_name:"项目部"
+          }
+        ],
+        organlist:[
+          {
+            organ_id:1,
+            organ_name:"武汉市工商局"
+          },{
+            organ_id:2,
+            organ_name:"洪山区工商局"
+          },{
+            organ_id:3,
+            organ_name:"洪山区教育局"
+          }
+        ]
       }
     },
     created(){
+//      console.log(this.route_id)
       this.route_id && this.get_form_data()
     },
     methods: {

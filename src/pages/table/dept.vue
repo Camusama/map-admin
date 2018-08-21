@@ -51,7 +51,7 @@
         <el-table-column
           prop="joblist"
           label="部门岗位"
-          width="400"
+          width="390"
         >
           <template slot-scope="scope">
             <div v-for='v in scope.row.joblist'>
@@ -67,7 +67,7 @@
           label="操作"
           width="165">
           <template scope="props">
-            <router-link :to="{name: 'saveDept', params: {deptid: props.dept_id}}" tag="span">
+            <router-link :to="{name: 'saveDept', params: {dept_id: props.row.dept_id}}" tag="span">
               <el-button type="info" size="small" icon="edit">修改</el-button>
             </router-link>
             <el-button type="danger" size="small" icon="delete" @click="delete_dept(props.dept_id)">删除</el-button>
@@ -85,6 +85,11 @@
           <span>批量删除</span>
         </el-button>
         <div slot="page">
+          <div style="width: 120px;transform: translate(-110px,26px);color:#48576a;font-size: 14px">
+            每页显示
+            <el-input ref="iplength" v-model="length" max="99" min="3" size="mini" @blur="lengthchange" style="width:40px;"></el-input>
+            条
+          </div>
           <el-pagination
             @current-change="handleCurrentChange"
             :current-page="currentPage"
@@ -222,6 +227,21 @@
       // this.get_table_data()
     },
     methods: {
+      lengthchange(){
+        var  val =this.$refs.iplength.value
+        if(parseInt(this.$refs.iplength.value)){
+          if(val>40){
+            this.length=30
+          }else if(val<3){
+            this.length=3
+          }else{
+            this.length=val
+          }
+        }else{
+          this.length=10
+        }
+        this.get_table_data()
+      },
       submit_search() {
         if (this.searchkey === ""){
           this.get_table_data()
