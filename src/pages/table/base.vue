@@ -246,7 +246,10 @@
       },
       //批量选择
       on_batch_select(val){
-        this.batch_select = val
+        val.forEach ((item)=>{
+          this.batch_select.push(item.person_id)
+        })
+        // this.batch_select = val.person_id
       },
       //批量删除
       on_batch_del(){
@@ -257,6 +260,7 @@
         })
           .then(() => {
             this.load_data = true
+            console.log(this.batch_select)
             this.$fetch.api_table.batch_del(this.batch_select)
               .then(({msg}) => {
                 this.get_table_data()

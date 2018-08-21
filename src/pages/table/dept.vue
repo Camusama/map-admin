@@ -39,7 +39,7 @@
         <el-table-column
           prop="dept_name"
           label="部门名称"
-          width="400"
+          width="390"
         >
         </el-table-column>
         <el-table-column
