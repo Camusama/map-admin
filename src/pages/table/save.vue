@@ -7,6 +7,9 @@
       <el-row>
         <el-col :span="8">
           <el-form ref="form" :model="form" :rules="rules" label-width="100px">
+            <el-form-item label="用户ID:" prop="personid">
+              <el-input :disabled="flag" type="number" v-model.number="form.personid" placeholder="请输入ID" style="width: 250px;"></el-input>
+            </el-form-item>
             <el-form-item label="用户名:" prop="username">
               <el-input v-model="form.username" placeholder="请输入内容" style="width: 250px;"></el-input>
             </el-form-item>
@@ -36,20 +39,11 @@
                 style="width: 250px;">
               </el-input>
             </el-form-item>
-            <el-form-item label="是否管理员:" prop="admin">
+            <el-form-item label="是否管理员:" prop="isadmin">
               <el-radio-group v-model="form.isadmin">
-                <el-radio :label="1">是</el-radio>
-                <el-radio :label="0">否</el-radio>
+                <el-radio :label="true">是</el-radio>
+                <el-radio :label="false">否</el-radio>
               </el-radio-group>
-            </el-form-item>
-            <el-form-item label="岗位:" prop="job_id">
-              <el-input
-                placeholder="请输入内容"
-                :controls="false"
-                v-model="form.job_id"
-                style="width: 300px;"
-              >
-              </el-input>
             </el-form-item>
             <el-form-item label="组织：">
               <el-select v-model="organ_id" placeholder="请选择">
@@ -57,7 +51,8 @@
                   v-for="item in organlist"
                   :key="item.organ_id"
                   :label="item.organ_name"
-                  :value="item.organ_id">
+                  :value="item.organ_id"
+                  @click.native="getDeptlist">
                 </el-option>
               </el-select>
             </el-form-item>
@@ -67,17 +62,18 @@
                   v-for="item in deptlist"
                   :key="item.dept_id"
                   :label="item.dept_name"
-                  :value="item.dept_id">
+                  :value="item.dept_id"
+                  @click.native="getJoblist">
                 </el-option>
               </el-select>
             </el-form-item>
             <el-form-item label="岗位：">
-              <el-select v-model="job_id" placeholder="请选择">
+              <el-select v-model="form.jobid" placeholder="请选择" prop="jobid">
                 <el-option
                   v-for="item in joblist"
-                  :key="item.job_id"
-                  :label="item.job_name"
-                  :value="item.job_id">
+                  :key="item.jobid"
+                  :label="item.jobname"
+                  :value="item.jobid">
                 </el-option>
               </el-select>
             </el-form-item>
@@ -93,24 +89,28 @@
 </template>
 <script type="text/javascript">
   import {panelTitle} from 'components'
+  const url ="/api/personserver"
+  import axios from 'axios'
 
   export default{
     data(){
       return {
+        flag:true,
         organ_id:null,
         job_id:null,
         dept_id:null,
         form: {
+          personid:null,
           username:null,
           password:null,
           realname: null,
           gender: null,
           telephone: null,
-          job_id: null,
+          jobid: null,
           isadmin:null,
           email:null
         },
-        route_id: this.$route.params.person_id,
+        route_id: this.$route.params.personid,
         load_data: false,
         on_submit_loading: false,
         rules: {
@@ -121,76 +121,149 @@
           job_id: [{required: true, message: 'JOB_ID不能为空', trigger: 'blur'}],
           email: [{required: true, message: '邮件不能为空', trigger: 'blur'}],
           telephone: [{required: true, message: '电话号码不能为空', trigger: 'blur'}],
+          personid: [{type:"number",required: true, message: '组织ID不能为空',trigger: 'blur'}]
         },
-        joblist:[
-          {
-            job_id:1,
-            job_name:"职员"
-          },
-          {
-            job_id:2,
-            job_name:"主任"
-          },
-          {
-            job_id:3,
-            job_name:"经理"
-          }
-        ],
-        deptlist:[
-          {
-            dept_id:1,
-            dept_name:"财政部"
-          },{
-            dept_id:2,
-            dept_name:"人事部"
-          },{
-            dept_id:3,
-            dept_name:"项目部"
-          }
-        ],
-        organlist:[
-          {
-            organ_id:1,
-            organ_name:"武汉市工商局"
-          },{
-            organ_id:2,
-            organ_name:"洪山区工商局"
-          },{
-            organ_id:3,
-            organ_name:"洪山区教育局"
-          }
-        ]
+        joblist:[],
+        deptlist:[],
+        organlist:[]
+
       }
     },
     created(){
-      this.organ_id=1
-      this.route_id && this.get_form_data()
-      console.log(this.route_id)
+      this.route_id && this.get_form_data() && this.getOrganlist()
+      if(typeof (this.route_id)==="undefined"){
+        this.flag=false
+      }
+      this.type=this.flag?"number":""
     },
     methods: {
       //获取数据
       get_form_data(){
         this.load_data = true
-        this.$fetch.api_table.get({
-          id: this.route_id
+        // 获取个人信息
+        axios.get(url,{
+          params:{
+            method:"queryById",
+            personid:this.route_id
+          }
         })
           .then(({data}) => {
             this.form = data
+            // console.log(this.form.jobid)
             this.load_data = false
+          })
+          .then(()=>{
+          axios.get(url,{
+          params:{
+            method:"queryDeptid",
+            jobid:this.form.jobid
+          }
+        })
+          .then(({data}) => {
+            this.dept_id=data
+            // console.log(this.dept_id)
+            axios.get(url,{
+              params:{
+                method:"queryOrganid",
+                dept_id:this.dept_id
+              }
+            })
+              .then(({data}) => {
+                this.organ_id=data
+                axios.get(url,{
+                  params:{
+                    method:"queryOrganlist",
+                  }
+                })
+                  .then(({data}) => {
+                    this.organlist=data
+                    axios.get(url,{
+                      params:{
+                        method:"queryDeptlist",
+                        organ_id:this.organ_id
+                      }
+                    })
+                      .then(({data}) => {
+                        this.deptlist=data
+                        axios.get(url,{
+                          params:{
+                            method:"queryJoblist",
+                            dept_id:this.dept_id
+                          }
+                        })
+                          .then(({data}) => {
+                            this.joblist=data
+                          })
+                      })
+                  })
+              })
+              .catch(() => {
+                this.load_data = false
+              })
+          })
+          .catch(() => {
+            this.load_data = false
+          })
+        }
+
+        )
+      },
+      getOrganlist(){
+        axios.get(url,{
+          params:{
+            method:"queryOrganlist",
+          }
+        })
+          .then(({data}) => {
+            this.organlist=data
           })
           .catch(() => {
             this.load_data = false
           })
       },
-      //时间选择改变时
-      on_change_birthday(val){
-        this.$set(this.form, 'birthday', val)
+      getDeptlist(){
+        this.dept_id=null
+        this.deptlist=[]
+        this.form.jobid=null
+        this.joblist=[]
+        axios.get(url,{
+          params:{
+            method:"queryDeptlist",
+            organ_id:this.organ_id
+          }
+        })
+          .then(({data}) => {
+            this.deptlist=data
+            console.log(this.deptlist)
+          })
+          .catch(() => {
+            this.load_data = false
+          })
+      },
+      getJoblist(){
+        this.form.jobid=null
+        this.joblist=[]
+        axios.get(url,{
+          params:{
+            method:"queryJoblist",
+            dept_id:this.dept_id
+          }
+        })
+          .then(({data}) => {
+            this.joblist=data
+            console.log(this.joblist)
+          })
+          .catch(() => {
+            this.load_data = false
+          })
       },
       //提交
       on_submit_form(){
         this.$refs.form.validate((valid) => {
           if (!valid) return false
           this.on_submit_loading = true
+
+
           this.$fetch.api_table.save(this.form)
             .then(({msg}) => {
               this.$message.success(msg)

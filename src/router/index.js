@@ -142,7 +142,7 @@ const routes = [{
     }
   },
     {
-    path: '/table/update/:person_id',
+    path: '/table/update/:personid',
     name: 'tableUpdate',
     component: saveTableComponent,
     meta: {

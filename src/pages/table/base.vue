@@ -30,7 +30,7 @@
           width="55">
         </el-table-column>
         <el-table-column
-          prop="person_id"
+          prop="personid"
           label="id"
           width="80"
           sortable
@@ -44,7 +44,7 @@
         >
         </el-table-column>
         <el-table-column
-          prop="realname"
+          prop="relname"
           label="姓名"
           width="130"
           sortable
@@ -71,7 +71,7 @@
         >
         </el-table-column>
         <el-table-column
-          prop="job_id"
+          prop="jobDescr"
           label="岗位"
           width="400px"
         >
@@ -80,15 +80,13 @@
           prop="isadmin"
           label="是否管理员"
           width="120">
-          <template scope="props">
-            <span v-text="props.row.isadmin == 1 ? '是' : '否'"></span>
-          </template>
+
         </el-table-column>
         <el-table-column
           label="操作"
           width="180">
           <template scope="props">
-            <router-link :to="{name: 'tableUpdate', params: {person_id:props.row.person_id}}" tag="span">
+            <router-link :to="{name: 'tableUpdate', params: {personid:props.row.personid}}" tag="span">
               <el-button type="info" size="small" icon="edit">修改</el-button>
             </router-link>
             <el-button type="danger" size="small" icon="delete" @click="delete_data(props.row.id)">删除</el-button>
@@ -126,7 +124,7 @@
 <script type="text/javascript">
   import {panelTitle, bottomToolBar} from 'components'
   import axios from 'axios'
-
+  const url ="/api/personserver"
   export default{
     data(){
       return {
@@ -205,37 +203,25 @@
         }
       },
       on_refresh(){
+
         this.get_table_data()
       },
       //获取数据
       // $fetch.api_table 等于api/index.js
       get_table_data(){
         this.load_data = true
-//        axios.get('/api/user/getList',{
-//          params:{
-//            page: this.currentPage,
-//            length: this.length
-//          }
-//        }).then((res)=>{
-//            console.log(res)
-//            this.table_data=res.data.result
-//            this.page=res.data.page
-//            this.total = res.data.total
-//            setTimeout(1000)
-//            this.load_data = false
-//          })
-         this.$fetch.api_table.list({
+       axios.get(url,{
+         params:{
+           method:"personList",
            page: this.currentPage,
            length: this.length
-         })
-         .then((res) => {
-           console.log(res)
-           this.table_data = res.data.result
-           this.currentPage = res.data.page
+         }
+       }).then((res)=>{
+           // console.log(res)
+           this.table_data=res.data.result
+           this.page=res.data.page
            this.total = res.data.total
-           this.load_data = false
-         })
-         .catch(() => {
+           setTimeout(1000)
            this.load_data = false
          })
       },

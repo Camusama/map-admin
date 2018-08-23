@@ -8,7 +8,7 @@
         <el-col :span="8">
           <el-form ref="form" :model="form" :rules="rules" label-width="100px">
             <el-form-item label="组织ID:" prop="organ_id">
-              <el-input :disabled="flag" v-model="form.organ_id" placeholder="请输入内容" style="width: 250px;"></el-input>
+              <el-input :disabled="flag" type="number" v-model.number="form.organ_id" placeholder="请输入内容" style="width: 250px;"></el-input>
             </el-form-item>
             <el-form-item label="组织名称:" prop="organ_name">
               <el-input v-model="form.organ_name" placeholder="请输入内容" style="width: 250px;"></el-input>
@@ -33,6 +33,7 @@
     data(){
       return {
         flag:true,
+        type:"",
         form: {
           organ_id:null,
           organ_name: null,
@@ -41,17 +42,19 @@
         load_data: false,
         on_submit_loading: false,
         rules: {
-          organ_name: [{required: true, message: '组织名称不能为空', trigger: 'blur'}],
-          organ_id: [{required: true, message: '组织ID不能为空', trigger: 'blur'}]
+          organ_name: [{required: true, message: '组织名称不能为空',trigger: 'blur'}],
+          organ_id: [{type:"number",required: true, message: '组织ID不能为空',trigger: 'blur'}]
         }
       }
     },
-    created(){
-      console.log(this.route_id)
+    mounted(){
+      // console.log(this.route_id)
       this.route_id && this.get_form_data()
       if(typeof (this.route_id)==="undefined"){
         this.flag=false
       }
+      this.type=this.flag?"number":""
+      console.log(typeof (this.type))
     },
     methods: {
       //获取数据
@@ -67,7 +70,9 @@
           }
         })
           .then(({data}) => {
-            this.form = data
+            console.log(data)
+            this.form.organ_id = data.organ_id
+            this.form.organ_name=data.organ_name
             this.load_data = false
           })
           .catch(() => {
@@ -79,14 +84,42 @@
         this.$refs.form.validate((valid) => {
           if (!valid) return false
           this.on_submit_loading = true
-          this.$fetch.api_table.save(this.form)
-            .then(({msg}) => {
-              this.$message.success(msg)
+          var method =this.flag?"changeorgan":"addorgan"
+          console.log(this.form.organ_name)
+          var organ_id=this.form.organ_id*1
+          var organ_name=this.form.organ_name
+          axios.get(url,{
+            params:{
+              method:method,
+              organ_id:organ_id,
+              organ_name:organ_name
+            }
+          })
+            .then((res) => {
+              console.log(res)
+              this.$message.success(res.data)
               setTimeout(this.$router.back(), 500)
             })
-            .catch(() => {
+            .catch((err) => {
+              this.load_data = false
               this.on_submit_loading = false
+              var message =err.response.data
+              if(err.response.status === 404){
+                message="ID重复，添加失败！"
+              }
+              this.$notify.info({
+                title: '温馨提示',
+                message:message,
+              })
             })
+          // this.$fetch.api_table.save(this.form)
+          //   .then(({msg}) => {
+          //     this.$message.success(msg)
+          //     setTimeout(this.$router.back(), 500)
+          //   })
+          //   .catch(() => {
+          //     this.on_submit_loading = false
+          //   })
         })
       }
     },

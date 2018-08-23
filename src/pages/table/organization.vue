@@ -12,9 +12,7 @@
       <div style="width: 30%;margin-bottom: 20px">
         <el-input placeholder="请输入内容" v-model="searchkey" class="input-with-select">
           <el-select v-model="searchid" slot="prepend" placeholder="请选择方式" style="width: 130px;">
-            <el-option label="按用户名查询" value="username"></el-option>
-            <el-option label="按姓名查询" value="name"></el-option>
-            <el-option label="按岗位查询" value="job"></el-option>
+            <el-option label="按组织名查询" value="organname"></el-option>
           </el-select>
           <el-button slot="append" @click="submit_search"><i class="fa fa-search" aria-hidden="true"></i></el-button>
         </el-input>
@@ -99,6 +97,7 @@
 <script type="text/javascript">
   import {panelTitle, bottomToolBar} from 'components'
   import axios from 'axios'
+  axios.defaults.timeout = 5000;
   const url="/api/organserver"
 
   export default{
@@ -117,86 +116,7 @@
         //批量选择数组
         batch_select: [],
         // table_data: null,
-        table_data:[
-          {
-            organ_id:1,
-            organ_name:'洪山区工商局',
-            deptlist:[
-              {
-                dept_id:1,
-                dept_name:'财政部'
-              },
-              {
-                dept_id:2,
-                dept_name:'组织部'
-              },
-              {
-                dept_id:3,
-                dept_name:'人事部'
-              },
-              {
-                dept_id:4,
-                dept_name:'项目部'
-              },
-              {
-                dept_id:5,
-                dept_name:'管理部'
-              }
-            ]
-          },
-          {
-            organ_id:2,
-            organ_name:'洪山区税务局',
-            deptlist:[
-              {
-                dept_id:1,
-                dept_name:'财政部'
-              },
-              {
-                dept_id:2,
-                dept_name:'组织部'
-              },
-              {
-                dept_id:3,
-                dept_name:'人事部'
-              },
-              {
-                dept_id:4,
-                dept_name:'项目部'
-              },
-              {
-                dept_id:5,
-                dept_name:'管理部'
-              }
-            ]
-          },
-          {
-            organ_id:3,
-            organ_name:'武汉市政府办公厅',
-            deptlist:[
-              {
-                dept_id:1,
-                dept_name:'财政部'
-              },
-              {
-                dept_id:2,
-                dept_name:'组织部'
-              },
-              {
-                dept_id:3,
-                dept_name:'人事部'
-              },
-              {
-                dept_id:4,
-                dept_name:'项目部'
-              },
-              {
-                dept_id:5,
-                dept_name:'管理部'
-              }
-            ]
-          }
-        ]
+        table_data:[]
       }
     },
     components: {
@@ -225,36 +145,21 @@
       submit_search() {
         if (this.searchkey === ""){
           this.get_table_data()
-        }else if(this.searchid === "username"){
-          let temp=[]
-          this.table_data.forEach((item) => {
-            console.log(item.username)
-            if(item.username){
-              if(item.username.indexOf(this.searchkey)>=0){
-                temp.push(item)
-              }
+        }else if(this.searchid === "organname"){
+          this.load_data = true
+          axios.get(url,{
+            params:{
+              method:"searchorgan",
+              page: this.currentPage,
+              length: this.length,
+              organ_name:this.searchkey
             }
-            this.table_data=temp
-          })
-        }else if(this.searchid === "name"){
-          let temp=[]
-          this.table_data.forEach((item) => {
-            if(item.name){
-              if(item.name.indexOf(this.searchkey)>=0){
-                temp.push(item)
-              }
-            }
-            this.table_data=temp
-          })
-        }else if (this.searchid === "job"){
-          let temp=[]
-          this.table_data.forEach((item) => {
-            if(item.job){
-              if(item.job.indexOf(this.searchkey)>=0){
-                temp.push(item)
-              }
-            }
-            this.table_data=temp
+          }).then((res)=>{
+            setTimeout(2000)
+            this.table_data=res.data.result
+            this.currentPage=res.data.page
+            this.total = res.data.total
+            this.load_data = false
           })
         }
       },
@@ -272,12 +177,10 @@
             length: this.length
           }
         }).then((res)=>{
-            console.log(res)
             this.table_data=res.data.result
             this.currentPage=res.data.page
             this.total = res.data.total
-            setTimeout(1000)
-            this.load_data = false
+            setTimeout(this.load_data = false,2000)
           })
        //  this.$fetch.api_table.list({
        //    page: this.currentPage,
@@ -298,39 +201,49 @@
 
       },
       delete_organ(organid){
-        this.load_data = true
-        axios.get(url,{
-          params:{
-            method:"delOrgan",
-            organ_id:organid
-          }
-        }).then((res)=>{
-          console.log(res)
-          this.$message.success(res.msg)
-          setTimeout(1000)
-          this.load_data = false
-        })
-      },
-      //单个删除
-      delete_data(item){
         this.$confirm('此操作将删除该数据, 是否继续?', '提示', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
           type: 'warning'
         })
           .then(() => {
-            this.load_data = true
-            this.$fetch.api_table.del(item)
-              .then(({msg}) => {
-                this.get_table_data()
-                this.$message.success(msg)
-              })
-              .catch(() => {
-              })
-          })
-          .catch(() => {
+            this.load_data=true
+            axios.get(url, {
+              params: {
+                method: "delOrgan",
+                organ_id: organid
+              }
+            }).then((res) => {
+              this.$message.success(res.data)
+              this.on_refresh()
+              setTimeout(1000)
+              this.load_data = false
+            })
           })
       },
+      // //单个删除
+      // delete_data(item){
+      //   this.$confirm('此操作将删除该数据, 是否继续?', '提示', {
+      //     confirmButtonText: '确定',
+      //     cancelButtonText: '取消',
+      //     type: 'warning'
+      //   })
+      //     .then(() => {
+      //       this.load_data = true
+      //       this.$fetch.api_table.del(item)
+      //         .then((res) => {
+      //           console.log(res)
+      //           this.get_table_data()
+      //           this.$message.success(res.data)
+      //           this.load_data=false
+      //           this.on_refresh()
+      //         })
+      //         .catch(() => {
+      //         })
+      //     })
+      //     .catch(() => {
+      //     })
+      // },
       //页码选择
       handleCurrentChange(val) {
         this.currentPage = val
