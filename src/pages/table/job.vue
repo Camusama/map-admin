@@ -12,9 +12,8 @@
       <div style="width: 30%;margin-bottom: 20px">
         <el-input placeholder="请输入内容" v-model="searchkey" class="input-with-select">
           <el-select v-model="searchid" slot="prepend" placeholder="请选择方式" style="width: 130px;">
-            <el-option label="按用户名查询" value="username"></el-option>
-            <el-option label="按姓名查询" value="name"></el-option>
-            <el-option label="按岗位查询" value="job"></el-option>
+            <el-option label="按岗位名查询" value="jobname"></el-option>
+            <el-option label="按部门名查询" value="deptname"></el-option>
           </el-select>
           <el-button slot="append" @click="submit_search"><i class="fa fa-search" aria-hidden="true"></i></el-button>
         </el-input>
@@ -61,7 +60,7 @@
             <router-link :to="{name: 'saveJob', params: {job_id: props.row.job_id}}" tag="span">
               <el-button type="info" size="small" icon="edit">修改</el-button>
             </router-link>
-            <el-button type="danger" size="small" icon="delete" @click="delete_job(props.job_id)">删除</el-button>
+            <el-button type="danger" size="small" icon="delete" @click="delete_job(props.row.job_id)">删除</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -96,10 +95,11 @@
 <script type="text/javascript">
   import {panelTitle, bottomToolBar} from 'components'
   import axios from 'axios'
-
+  const url ="/api/jobserver"
   export default{
     data(){
       return {
+        idlist:"",
         searchkey:"",
         searchid:"",
         //当前页码
@@ -107,38 +107,12 @@
         //数据总条目
         total: 0,
         //每页显示多少条数据
-        length: 5,
+        length: 10,
         //请求时的loading效果
         load_data: false,
         //批量选择数组
         batch_select: [],
-        // table_data: null,
-        table_data:[
-          {
-            job_id:1,
-            job_name:'职员',
-            dept_name:'财政部',
-            organ_name:'洪山区工商局',
-          },
-          {
-            job_id:2,
-            job_name:'职员',
-            dept_name:'组织部',
-            organ_name:'洪山区工商局',
-          },
-          {
-            job_id:3,
-            job_name:'职员',
-            dept_name:'项目部',
-            organ_name:'洪山区工商局',
-          },
-          {
-            job_id:4,
-            job_name:'处长',
-            dept_name:'财政部',
-            organ_name:'洪山区税务局',
-          }
-        ]
+        table_data: null,
       }
     },
     components: {
@@ -146,7 +120,7 @@
       bottomToolBar,
     },
     created(){
-      // this.get_table_data()
+      this.get_table_data()
     },
     methods: {
       lengthchange(){
@@ -162,41 +136,46 @@
         }else{
           this.length=10
         }
-        this.get_table_data()
+        if(this.searchid !== ""&& this.searchkey!==""){
+          this.submit_search()
+        }else if (this.searchkey === ""){
+          this.get_table_data()
+        }
       },
       submit_search() {
         if (this.searchkey === ""){
           this.get_table_data()
-        }else if(this.searchid === "username"){
-          let temp=[]
-          this.table_data.forEach((item) => {
-            console.log(item.username)
-            if(item.username){
-              if(item.username.indexOf(this.searchkey)>=0){
-                temp.push(item)
-              }
+        }else if(this.searchid === "jobname"){
+          axios.get(url,{
+            params:{
+              method:"searchByjobname",
+              page: this.currentPage,
+              length: this.length,
+              jobname:this.searchkey
             }
-            this.table_data=temp
+          }).then((res)=>{
+            // console.log(res)
+            this.table_data=res.data.result
+            this.page=res.data.page
+            this.total = res.data.total
+            setTimeout(1000)
+            this.load_data = false
           })
-        }else if(this.searchid === "name"){
-          let temp=[]
-          this.table_data.forEach((item) => {
-            if(item.name){
-              if(item.name.indexOf(this.searchkey)>=0){
-                temp.push(item)
-              }
+        }else if (this.searchid === "deptname"){
+          axios.get(url,{
+            params:{
+              method:"searchBydeptname",
+              page: this.currentPage,
+              length: this.length,
+              deptname:this.searchkey
             }
-            this.table_data=temp
-          })
-        }else if (this.searchid === "job"){
-          let temp=[]
-          this.table_data.forEach((item) => {
-            if(item.job){
-              if(item.job.indexOf(this.searchkey)>=0){
-                temp.push(item)
-              }
-            }
-            this.table_data=temp
+          }).then((res)=>{
+            // console.log(res)
+            this.table_data=res.data.result
+            this.page=res.data.page
+            this.total = res.data.total
+            setTimeout(1000)
+            this.load_data = false
           })
         }
       },
@@ -206,34 +185,21 @@
       //获取数据
       // $fetch.api_table 等于api/index.js
       get_table_data(){
-        // this.load_data = true
-        // axios.get('/api/user/getList',{
-        //   params:{
-        //     page: this.currentPage,
-        //     length: this.length
-        //   }
-        // }).then((res)=>{
-        //     console.log(res)
-        //     this.table_data=res.data.result
-        //     this.page=res.data.page
-        //     this.total = res.data.total
-        //     setTimeout(1000)
-        //     this.load_data = false
-        //   })
-        //  this.$fetch.api_table.list({
-        //    page: this.currentPage,
-        //    length: this.length
-        //  })
-        //    .then((res) => {
-        //      console.log(res)
-        //      this.table_data = res.data.result
-        //      this.currentPage = res.data.page
-        //      this.total = res.data.total
-        //      this.load_data = false
-        //    })
-        //    .catch(() => {
-        //      this.load_data = false
-        //    })
+        this.load_data = true
+        axios.get(url,{
+          params:{
+            method:"jobList",
+            page: this.currentPage,
+            length: this.length
+          }
+        }).then((res)=>{
+            // console.log(res)
+            this.table_data=res.data.result
+            this.page=res.data.page
+            this.total = res.data.total
+            setTimeout(1000)
+            this.load_data = false
+          })
       },
       delete_job(jobid){
         this.$confirm('此操作将删除该数据, 是否继续?', '提示', {
@@ -242,33 +208,40 @@
           type: 'warning'
         })
           .then(() => {
-
-        })
-      },
-      //单个删除
-      delete_data(item){
-        this.$confirm('此操作将删除该数据, 是否继续?', '提示', {
-          confirmButtonText: '确定',
-          cancelButtonText: '取消',
-          type: 'warning'
-        })
-          .then(() => {
             this.load_data = true
-            this.$fetch.api_table.del(item)
-              .then(({msg}) => {
-                this.get_table_data()
-                this.$message.success(msg)
+            axios.get(url,{
+              params:{
+                method:"delJob",
+                jobid:jobid,
+              }
+            })
+              .then((res) => {
+                // console.log(res)
+                this.$message.success(res.data)
+                this.load_data = false
+                this.on_refresh()
               })
-              .catch(() => {
+              .catch((err) => {
+                this.load_data = false
+                var message =""
+                if(err.response.status === 404){
+                  message="删除失败！"
+                }
+                this.$notify.info({
+                  title: '温馨提示',
+                  message:message,
+                })
               })
-          })
-          .catch(() => {
-          })
+        })
       },
       //页码选择
       handleCurrentChange(val) {
         this.currentPage = val
-        this.get_table_data()
+        if(this.searchid !== ""&& this.searchkey!==""){
+          this.submit_search()
+        }else if (this.searchkey === ""){
+          this.get_table_data()
+        }
       },
       //批量选择
       on_batch_select(val){
@@ -280,19 +253,47 @@
           confirmButtonText: '确定',
           cancelButtonText: '取消',
           type: 'warning'
+        }).then(() => {
+          this.load_data = true
+          this.batch_select.forEach ((item)=>{
+            this.idlist+=item.job_id+","
+          })
+          axios.get(url, {
+            params: {
+              method: "delJoblist",
+              list: this.idlist,
+            }
+          })
+            .then((res) => {
+              // console.log(res)
+              this.$message.success(res.data)
+              this.load_data = false
+              this.on_refresh()
+            })
+            .catch((err) => {
+              this.load_data = false
+              var message = ""
+              if (err.response.status === 404) {
+                message = "删除失败！"
+              }
+              this.$notify.info({
+                title: '温馨提示',
+                message: message,
+              })
+            })
         })
-          .then(() => {
-            this.load_data = true
-            this.$fetch.api_table.batch_del(this.batch_select)
-              .then(({msg}) => {
-                this.get_table_data()
-                this.$message.success(msg)
-              })
-              .catch(() => {
-              })
-          })
-          .catch(() => {
-          })
+          // .then(() => {
+          //   this.load_data = true
+          //   this.$fetch.api_table.batch_del(this.batch_select)
+          //     .then(({msg}) => {
+          //       this.get_table_data()
+          //       this.$message.success(msg)
+          //     })
+          //     .catch(() => {
+          //     })
+          // })
+          // .catch(() => {
+          // })
       }
     }
   }

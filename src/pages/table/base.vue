@@ -89,7 +89,7 @@
             <router-link :to="{name: 'tableUpdate', params: {personid:props.row.personid}}" tag="span">
               <el-button type="info" size="small" icon="edit">修改</el-button>
             </router-link>
-            <el-button type="danger" size="small" icon="delete" @click="delete_data(props.row.id)">删除</el-button>
+            <el-button type="danger" size="small" icon="delete" @click="delete_data(props.row.personid)">删除</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -106,7 +106,7 @@
         <div slot="page">
           <div style="width: 120px;transform: translate(-110px,26px);color:#48576a;font-size: 14px">
             每页显示
-            <el-input ref="iplength" v-model="length" max="99" min="3" size="mini" @blur="lengthchange" style="width:40px;"></el-input>
+            <el-input ref="iplength" v-model.number="length" max="99" min="3" size="mini" @blur="lengthchange" style="width:40px;"></el-input>
             条
           </div>
           <el-pagination
@@ -124,10 +124,14 @@
 <script type="text/javascript">
   import {panelTitle, bottomToolBar} from 'components'
   import axios from 'axios'
+  import {mapGetters} from 'vuex'
+  import {GET_USER_INFO} from 'store/getters/type'
   const url ="/api/personserver"
   export default{
     data(){
       return {
+        personid:null,
+        idlist:"",
         searchkey:"",
         searchid:"",
         table_data: null,
@@ -143,12 +147,18 @@
         batch_select: []
       }
     },
+    computed:{
+      ...mapGetters({
+        get_user_info: GET_USER_INFO
+      })
+    },
     components: {
       panelTitle,
       bottomToolBar,
     },
     created(){
       this.get_table_data()
+      this.personid=this.get_user_info.user.personid
     },
     methods: {
       lengthchange(){
@@ -164,41 +174,63 @@
         }else{
           this.length=10
         }
-        this.get_table_data()
+        if(this.searchid !== ""&& this.searchkey!==""){
+          this.submit_search()
+        }else if (this.searchkey === ""){
+          this.get_table_data()
+        }
       },
       submit_search() {
         if (this.searchkey === ""){
           this.get_table_data()
         }else if(this.searchid === "username"){
-          let temp=[]
-          this.table_data.forEach((item) => {
-            console.log(item.username)
-            if(item.username){
-              if(item.username.indexOf(this.searchkey)>=0){
-                temp.push(item)
-              }
+          axios.get(url,{
+            params:{
+              method:"searchByusername",
+              page: this.currentPage,
+              length: this.length,
+              username:this.searchkey
             }
-            this.table_data=temp
+          }).then((res)=>{
+            // console.log(res)
+            this.table_data=res.data.result
+            this.page=res.data.page
+            this.total = res.data.total
+            setTimeout(1000)
+            this.load_data = false
           })
         }else if(this.searchid === "name"){
-          let temp=[]
-          this.table_data.forEach((item) => {
-            if(item.name){
-              if(item.name.indexOf(this.searchkey)>=0){
-                temp.push(item)
-              }
+          axios.get(url,{
+            params:{
+              method:"searchByname",
+              page: this.currentPage,
+              length: this.length,
+              realname:this.searchkey
             }
-            this.table_data=temp
+          }).then((res)=>{
+            // console.log(res)
+            this.table_data=res.data.result
+            this.page=res.data.page
+            this.total = res.data.total
+            setTimeout(1000)
+            this.load_data = false
           })
+
         }else if (this.searchid === "job"){
-          let temp=[]
-          this.table_data.forEach((item) => {
-            if(item.job){
-              if(item.job.indexOf(this.searchkey)>=0){
-                temp.push(item)
-              }
+          axios.get(url,{
+            params:{
+              method:"searchByjob",
+              page: this.currentPage,
+              length: this.length,
+              jobname:this.searchkey
             }
-            this.table_data=temp
+          }).then((res)=>{
+            // console.log(res)
+            this.table_data=res.data.result
+            this.page=res.data.page
+            this.total = res.data.total
+            setTimeout(1000)
+            this.load_data = false
           })
         }
       },
@@ -226,7 +258,7 @@
          })
       },
       //单个删除
-      delete_data(item){
+      delete_data(personid){
         this.$confirm('此操作将删除该数据, 是否继续?', '提示', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
@@ -234,13 +266,36 @@
         })
           .then(() => {
             this.load_data = true
-            this.$fetch.api_table.del(item)
-              .then(({msg}) => {
-                this.get_table_data()
-                this.$message.success(msg)
+            axios.get(url,{
+              params:{
+                method:"delPerson",
+                personid:personid,
+              }
+            })
+              .then((res) => {
+                // console.log(res)
+                this.$message.success(res.data)
+                this.load_data = false
+                this.on_refresh()
               })
-              .catch(() => {
+              .catch((err) => {
+                this.load_data = false
+                var message =""
+                if(err.response.status === 404){
+                  message="删除失败！"
+                }
+                this.$notify.info({
+                  title: '温馨提示',
+                  message:message,
+                })
               })
+            // this.$fetch.api_table.del(item)
+            //   .then(({msg}) => {
+            //     this.get_table_data()
+            //     this.$message.success(msg)
+            //   })
+            //   .catch(() => {
+            //   })
           })
           .catch(() => {
           })
@@ -248,14 +303,15 @@
       //页码选择
       handleCurrentChange(val) {
         this.currentPage = val
-        this.get_table_data()
+        if(this.searchid !== ""&& this.searchkey!==""){
+          this.submit_search()
+        }else if (this.searchkey === ""){
+          this.get_table_data()
+        }
       },
       //批量选择
       on_batch_select(val){
-        val.forEach ((item)=>{
-          this.batch_select.push(item.person_id)
-        })
-        // this.batch_select = val.person_id
+        this.batch_select = val
       },
       //批量删除
       on_batch_del(){
@@ -266,14 +322,44 @@
         })
           .then(() => {
             this.load_data = true
-            console.log(this.batch_select)
-            this.$fetch.api_table.batch_del(this.batch_select)
-              .then(({msg}) => {
-                this.get_table_data()
-                this.$message.success(msg)
+            this.batch_select.forEach ((item)=>{
+                this.idlist+=item.personid+","
               })
-              .catch(() => {
+              console.log(this.idlist)
+            axios.get(url,{
+              params:{
+                method:"delPersonArray",
+                list:this.idlist,
+              }
+            })
+              .then((res) => {
+                // console.log(res)
+                this.$message.success(res.data)
+                this.load_data = false
+                this.on_refresh()
               })
+              .catch((err) => {
+                this.load_data = false
+                var message =""
+                if(err.response.status === 404){
+                  message="删除失败！"
+                }
+                this.$notify.info({
+                  title: '温馨提示',
+                  message:message,
+                })
+              })
+            // this.batch_select.forEach ((item)=>{
+            //   this.idlist+=item.personid+","
+            // })
+            // console.log(this.idlist)
+            // this.$fetch.api_table.batch_del(this.batch_select)
+            //   .then(({msg}) => {
+            //     this.get_table_data()
+            //     this.$message.success(msg)
+            //   })
+            //   .catch(() => {
+            //   })
           })
           .catch(() => {
           })

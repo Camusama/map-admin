@@ -46,7 +46,7 @@
               </el-radio-group>
             </el-form-item>
             <el-form-item label="组织：">
-              <el-select v-model="organ_id" placeholder="请选择">
+              <el-select v-model.number="organ_id" placeholder="请选择">
                 <el-option
                   v-for="item in organlist"
                   :key="item.organ_id"
@@ -57,7 +57,7 @@
               </el-select>
             </el-form-item>
             <el-form-item label="部门：">
-              <el-select v-model="dept_id"  placeholder="请选择">
+              <el-select v-model.number="dept_id"  placeholder="请选择">
                 <el-option
                   v-for="item in deptlist"
                   :key="item.dept_id"
@@ -67,8 +67,8 @@
                 </el-option>
               </el-select>
             </el-form-item>
-            <el-form-item label="岗位：">
-              <el-select v-model="form.jobid" placeholder="请选择" prop="jobid">
+            <el-form-item label="岗位：" prop="jobid">
+              <el-select v-model.number="form.jobid" placeholder="请选择" prop="jobid">
                 <el-option
                   v-for="item in joblist"
                   :key="item.jobid"
@@ -104,10 +104,10 @@
           username:null,
           password:null,
           realname: null,
-          gender: null,
+          gender: "男",
           telephone: null,
           jobid: null,
-          isadmin:null,
+          isadmin:false,
           email:null
         },
         route_id: this.$route.params.personid,
@@ -118,9 +118,9 @@
           password: [{required: true, message: '密码不能为空', trigger: 'blur'}],
           realname: [{required: true, message: '姓名不能为空', trigger: 'blur'}],
           gender: [{required: true, message: '性别不能为空', trigger: 'blur'}],
-          job_id: [{required: true, message: 'JOB_ID不能为空', trigger: 'blur'}],
-          email: [{required: true, message: '邮件不能为空', trigger: 'blur'}],
-          telephone: [{required: true, message: '电话号码不能为空', trigger: 'blur'}],
+          jobid: [{type:"number",required: true, message: '请选择岗位', trigger: 'blur'}],
+          email: [{type:"email",required: true, message: '请输入正确邮箱!', trigger: 'blur'}],
+          // telephone: [{required: true, message: '电话号码不能为空', trigger: 'blur'}],
           personid: [{type:"number",required: true, message: '组织ID不能为空',trigger: 'blur'}]
         },
         joblist:[],
@@ -130,7 +130,8 @@
       }
     },
     created(){
-      this.route_id && this.get_form_data() && this.getOrganlist()
+      this.getOrganlist()
+      this.route_id && this.get_form_data()
       if(typeof (this.route_id)==="undefined"){
         this.flag=false
       }
@@ -262,16 +263,41 @@
         this.$refs.form.validate((valid) => {
           if (!valid) return false
           this.on_submit_loading = true
+          var method =this.flag?"changePerson":"addPerson"
 
-
-          this.$fetch.api_table.save(this.form)
-            .then(({msg}) => {
-              this.$message.success(msg)
+          var personid=this.form.personid
+          axios.get(url,{
+            params:{
+              method:method,
+              personid:personid,
+              person:this.form
+            }
+          })
+            .then((res) => {
+              console.log(res)
+              this.$message.success(res.data)
               setTimeout(this.$router.back(), 500)
             })
-            .catch(() => {
-              this.on_submit_loading = false
+            .catch((err) => {
+            this.load_data = false
+            this.on_submit_loading = false
+            var message =""
+            if(err.response.status === 404){
+              message="信息有误，添加失败！"
+            }
+            this.$notify.info({
+              title: '温馨提示',
+              message:message,
             })
+          })
+          // this.$fetch.api_table.save(this.form)
+          //   .then(({msg}) => {
+          //     this.$message.success(msg)
+          //     setTimeout(this.$router.back(), 500)
+          //   })
+          //   .catch(() => {
+          //     this.on_submit_loading = false
+          //   })
         })
       }
     },

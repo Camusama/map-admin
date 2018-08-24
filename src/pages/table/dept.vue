@@ -12,9 +12,8 @@
       <div style="width: 30%;margin-bottom: 20px">
         <el-input placeholder="请输入内容" v-model="searchkey" class="input-with-select">
           <el-select v-model="searchid" slot="prepend" placeholder="请选择方式" style="width: 130px;">
-            <el-option label="按用户名查询" value="username"></el-option>
-            <el-option label="按姓名查询" value="name"></el-option>
-            <el-option label="按岗位查询" value="job"></el-option>
+            <el-option label="按部门名查询" value="deptname"></el-option>
+            <el-option label="按组织名查询" value="organname"></el-option>
           </el-select>
           <el-button slot="append" @click="submit_search"><i class="fa fa-search" aria-hidden="true"></i></el-button>
         </el-input>
@@ -57,8 +56,8 @@
             <div v-for='v in scope.row.joblist'>
               <div style="margin-top:4px;display: flex;justify-content:space-between;border-bottom: 1px solid #dfe6ec;
               padding: 1px 3px;">
-                {{v.job_name}}
-                <el-button plain  size="mini" icon="delete" @click="delete_job(v.job_id,scope.row.dept_id)"></el-button>
+                {{v.jobname}}
+                <el-button plain  size="mini" icon="delete" @click="delete_job(v.jobid)"></el-button>
               </div>
             </div>
           </template>
@@ -70,7 +69,7 @@
             <router-link :to="{name: 'saveDept', params: {dept_id: props.row.dept_id}}" tag="span">
               <el-button type="info" size="small" icon="edit">修改</el-button>
             </router-link>
-            <el-button type="danger" size="small" icon="delete" @click="delete_dept(props.dept_id)">删除</el-button>
+            <el-button type="danger" size="small" icon="delete" @click="delete_dept(props.row.dept_id)">删除</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -105,10 +104,11 @@
 <script type="text/javascript">
   import {panelTitle, bottomToolBar} from 'components'
   import axios from 'axios'
-
+  const url ="/api/deptserver"
   export default{
     data(){
       return {
+        idlist:"",
         searchkey:"",
         searchid:"",
         //当前页码
@@ -122,101 +122,100 @@
         //批量选择数组
         batch_select: [],
         // table_data: null,
-        table_data:[
-          {
-            dept_id:1,
-            dept_name:'财政部',
-            organ_name:'洪山区工商局',
-            joblist:[
-              {
-                job_id:1,
-                job_name:'主任'
-              },
-              {
-                job_id:2,
-                job_name:'副主任'
-              },
-              {
-                job_id:3,
-                job_name:'官员'
-              },
-              {
-                job_id:4,
-                job_name:'职员'
-              },
-              {
-                job_id:5,
-                job_name:'处长'
-              },
-              {
-                job_id:6,
-                job_name:'副处长'
-              }
-            ]
-          },
-          {
-            dept_id:1,
-            dept_name:'财政部',
-            organ_name:'洪山区工商局',
-            joblist:[
-              {
-                job_id:1,
-                job_name:'主任'
-              },
-              {
-                job_id:2,
-                job_name:'副主任'
-              },
-              {
-                job_id:3,
-                job_name:'官员'
-              },
-              {
-                job_id:4,
-                job_name:'职员'
-              },
-              {
-                job_id:5,
-                job_name:'处长'
-              },
-              {
-                job_id:6,
-                job_name:'副处长'
-              }
-            ]
-          },
-          {
-            dept_id:1,
-            dept_name:'财政部',
-            organ_name:'洪山区工商局',
-            joblist:[
-              {
-                job_id:1,
-                job_name:'主任'
-              },
-              {
-                job_id:2,
-                job_name:'副主任'
-              },
-              {
-                job_id:3,
-                job_name:'官员'
-              },
-              {
-                job_id:4,
-                job_name:'职员'
-              },
-              {
-                job_id:5,
-                job_name:'处长'
-              },
-              {
-                job_id:6,
-                job_name:'副处长'
-              }
-            ]
-          }
-        ]
+        table_data:[]
+          // {
+          //   dept_id:1,
+          //   dept_name:'财政部',
+          //   organ_name:'洪山区工商局',
+          //   joblist:[
+          //     {
+          //       job_id:1,
+          //       job_name:'主任'
+          //     },
+          //     {
+          //       job_id:2,
+          //       job_name:'副主任'
+          //     },
+          //     {
+          //       job_id:3,
+          //       job_name:'官员'
+          //     },
+          //     {
+          //       job_id:4,
+          //       job_name:'职员'
+          //     },
+          //     {
+          //       job_id:5,
+          //       job_name:'处长'
+          //     },
+          //     {
+          //       job_id:6,
+          //       job_name:'副处长'
+          //     }
+          //   ]
+          // },
+          // {
+          //   dept_id:1,
+          //   dept_name:'财政部',
+          //   organ_name:'洪山区工商局',
+          //   joblist:[
+          //     {
+          //       job_id:1,
+          //       job_name:'主任'
+          //     },
+          //     {
+          //       job_id:2,
+          //       job_name:'副主任'
+          //     },
+          //     {
+          //       job_id:3,
+          //       job_name:'官员'
+          //     },
+          //     {
+          //       job_id:4,
+          //       job_name:'职员'
+          //     },
+          //     {
+          //       job_id:5,
+          //       job_name:'处长'
+          //     },
+          //     {
+          //       job_id:6,
+          //       job_name:'副处长'
+          //     }
+          //   ]
+          // },
+          // {
+          //   dept_id:1,
+          //   dept_name:'财政部',
+          //   organ_name:'洪山区工商局',
+          //   joblist:[
+          //     {
+          //       job_id:1,
+          //       job_name:'主任'
+          //     },
+          //     {
+          //       job_id:2,
+          //       job_name:'副主任'
+          //     },
+          //     {
+          //       job_id:3,
+          //       job_name:'官员'
+          //     },
+          //     {
+          //       job_id:4,
+          //       job_name:'职员'
+          //     },
+          //     {
+          //       job_id:5,
+          //       job_name:'处长'
+          //     },
+          //     {
+          //       job_id:6,
+          //       job_name:'副处长'
+          //     }
+          //   ]
+          // }
       }
     },
     components: {
@@ -224,7 +223,7 @@
       bottomToolBar,
     },
     created(){
-      // this.get_table_data()
+      this.get_table_data()
     },
     methods: {
       lengthchange(){
@@ -240,41 +239,46 @@
         }else{
           this.length=5
         }
-        this.get_table_data()
+        if(this.searchid !== ""&& this.searchkey!==""){
+          this.submit_search()
+        }else if (this.searchkey === ""){
+          this.get_table_data()
+        }
       },
       submit_search() {
         if (this.searchkey === ""){
           this.get_table_data()
-        }else if(this.searchid === "username"){
-          let temp=[]
-          this.table_data.forEach((item) => {
-            console.log(item.username)
-            if(item.username){
-              if(item.username.indexOf(this.searchkey)>=0){
-                temp.push(item)
-              }
+        }else if(this.searchid === "deptname"){
+          axios.get(url,{
+            params:{
+              method:"searchListbyDeptName",
+              page: this.currentPage,
+              length: this.length,
+              dept_name:this.searchkey
             }
-            this.table_data=temp
+          }).then((res)=>{
+            // console.log(res)
+            this.table_data=res.data.result
+            this.page=res.data.page
+            this.total = res.data.total
+            setTimeout(1000)
+            this.load_data = false
           })
-        }else if(this.searchid === "name"){
-          let temp=[]
-          this.table_data.forEach((item) => {
-            if(item.name){
-              if(item.name.indexOf(this.searchkey)>=0){
-                temp.push(item)
-              }
+        }else if(this.searchid === "organname"){
+          axios.get(url,{
+            params:{
+              method:"searchListbyOrganName",
+              page: this.currentPage,
+              length: this.length,
+              organ_name:this.searchkey
             }
-            this.table_data=temp
-          })
-        }else if (this.searchid === "job"){
-          let temp=[]
-          this.table_data.forEach((item) => {
-            if(item.job){
-              if(item.job.indexOf(this.searchkey)>=0){
-                temp.push(item)
-              }
-            }
-            this.table_data=temp
+          }).then((res)=>{
+            // console.log(res)
+            this.table_data=res.data.result
+            this.page=res.data.page
+            this.total = res.data.total
+            setTimeout(1000)
+            this.load_data = false
           })
         }
       },
@@ -284,43 +288,21 @@
       //获取数据
       // $fetch.api_table 等于api/index.js
       get_table_data(){
-        // this.load_data = true
-        // axios.get('/api/user/getList',{
-        //   params:{
-        //     page: this.currentPage,
-        //     length: this.length
-        //   }
-        // }).then((res)=>{
-        //     console.log(res)
-        //     this.table_data=res.data.result
-        //     this.page=res.data.page
-        //     this.total = res.data.total
-        //     setTimeout(1000)
-        //     this.load_data = false
-        //   })
-        //  this.$fetch.api_table.list({
-        //    page: this.currentPage,
-        //    length: this.length
-        //  })
-        //    .then((res) => {
-        //      console.log(res)
-        //      this.table_data = res.data.result
-        //      this.currentPage = res.data.page
-        //      this.total = res.data.total
-        //      this.load_data = false
-        //    })
-        //    .catch(() => {
-        //      this.load_data = false
-        //    })
+        this.load_data = true
+        axios.get(url,{
+          params:{
+            method:"deptList",
+            page: this.currentPage,
+            length: this.length
+          }
+        }).then((res)=>{
+          this.table_data=res.data.result
+          this.page=res.data.page
+          this.total = res.data.total
+          this.load_data = false
+        })
       },
-      delete_job(jobid,deptid){
-
-      },
-      delete_dept(deptid){
-
-      },
-      //单个删除
-      delete_data(item){
+      delete_job(jobid){
         this.$confirm('此操作将删除该数据, 是否继续?', '提示', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
@@ -328,13 +310,62 @@
         })
           .then(() => {
             this.load_data = true
-            this.$fetch.api_table.del(item)
-              .then(({msg}) => {
-                this.get_table_data()
-                this.$message.success(msg)
+            axios.get("/api/jobserver",{
+              params:{
+                method:"delJob",
+                jobid:jobid,
+              }
+            })
+              .then((res) => {
+                // console.log(res)
+                this.$message.success(res.data)
+                this.load_data = false
+                this.on_refresh()
               })
-              .catch(() => {
+              .catch((err) => {
+                this.load_data = false
+                var message =""
+                if(err.response.status === 404){
+                  message="删除失败！"
+                }
+                this.$notify.info({
+                  title: '温馨提示',
+                  message:message,
+                })
               })
+          })
+      },
+      //单个删除
+      delete_dept(deptid){
+        this.$confirm('此操作将删除该数据, 是否继续?', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        })
+          .then(() => {
+            this.load_data = true
+            axios.get(url,{
+              params:{
+                method:"delDept",
+                dept_id:deptid ,
+              }
+            }).then((res) => {
+              this.$message.success(res.data)
+              this.load_data = false
+              this.on_refresh()
+            })
+              .catch((err) => {
+                this.load_data = false
+                var message =""
+                if(err.response.status === 404){
+                  message="删除失败！"
+                }
+                this.$notify.info({
+                  title: '温馨提示',
+                  message:message,
+                })
+              })
+
           })
           .catch(() => {
           })
@@ -342,7 +373,11 @@
       //页码选择
       handleCurrentChange(val) {
         this.currentPage = val
-        this.get_table_data()
+        if(this.searchid !== ""&& this.searchkey!==""){
+          this.submit_search()
+        }else if (this.searchkey === ""){
+          this.get_table_data()
+        }
       },
       //批量选择
       on_batch_select(val){
@@ -357,12 +392,31 @@
         })
           .then(() => {
             this.load_data = true
-            this.$fetch.api_table.batch_del(this.batch_select)
-              .then(({msg}) => {
-                this.get_table_data()
-                this.$message.success(msg)
+            this.batch_select.forEach ((item)=>{
+              this.idlist+=item.dept_id+","
+            })
+            axios.get(url, {
+              params: {
+                method: "delDeptlist",
+                list: this.idlist,
+              }
+            })
+              .then((res) => {
+                // console.log(res)
+                this.$message.success(res.data)
+                this.load_data = false
+                this.on_refresh()
               })
-              .catch(() => {
+              .catch((err) => {
+                this.load_data = false
+                var message = ""
+                if (err.response.status === 404) {
+                  message = "删除失败！"
+                }
+                this.$notify.info({
+                  title: '温馨提示',
+                  message: message,
+                })
               })
           })
           .catch(() => {

@@ -42,8 +42,8 @@
         load_data: false,
         on_submit_loading: false,
         rules: {
-          organ_name: [{required: true, message: '组织名称不能为空',trigger: 'blur'}],
-          organ_id: [{type:"number",required: true, message: '组织ID不能为空',trigger: 'blur'}]
+          organ_name: [{required: true, message: '请输入组织名称',trigger: 'blur'}],
+          organ_id: [{type:"number",required: true, message: '请输入组织ID',trigger: 'blur'}]
         }
       }
     },
