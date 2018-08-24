@@ -30,9 +30,15 @@
           width="55">
         </el-table-column>
         <el-table-column
+          label="序号"
+          width="80">
+          <template scope="scope"><span>{{scope.$index+(currentPage - 1) * length + 1}} </span></template>
+        </el-table-column>
+        <el-table-column
           prop="personid"
           label="id"
           width="80"
+          v-if="false"
           sortable
         >
         </el-table-column>
@@ -252,7 +258,7 @@
            // console.log(res)
            this.table_data=res.data.result
            this.page=res.data.page
-           this.total = res.data.total
+           this.total = res.data.total-1
            setTimeout(1000)
            this.load_data = false
          })

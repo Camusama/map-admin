@@ -7,7 +7,7 @@
       <el-row>
         <el-col :span="8">
           <el-form ref="form" :model="form" :rules="rules" label-width="100px">
-            <el-form-item label="岗位id:" prop="jobid">
+            <el-form-item label="岗位id:" prop="jobid" v-if="false">
               <el-input :disabled="flag" v-model.number="form.jobid" placeholder="请输入内容" style="width: 250px;"></el-input>
             </el-form-item>
             <el-form-item label="岗位名称:" prop="jobname">
@@ -64,7 +64,7 @@
         on_submit_loading: false,
         rules: {
           jobname: [{required: true, message: '岗位名不能为空', trigger: 'blur'}],
-          jobid: [{type:"number",required: true, message: '岗位ID不能为空', trigger: 'blur'}],
+          // jobid: [{type:"number",required: true, message: '岗位ID不能为空', trigger: 'blur'}],
           deptid: [{type:"number",required: true, message: '请选择所属部门', trigger: 'blur'}],
         },
         deptlist:[],

@@ -7,7 +7,7 @@
       <el-row>
         <el-col :span="8">
           <el-form ref="form" :model="form" :rules="rules" label-width="100px">
-            <el-form-item label="用户ID:" prop="personid">
+            <el-form-item label="用户ID:" prop="personid" v-if="false">
               <el-input :disabled="flag" type="number" v-model.number="form.personid" placeholder="请输入ID" style="width: 250px;"></el-input>
             </el-form-item>
             <el-form-item label="用户名:" prop="username">
@@ -121,7 +121,7 @@
           jobid: [{type:"number",required: true, message: '请选择岗位', trigger: 'blur'}],
           email: [{type:"email",required: true, message: '请输入正确邮箱!', trigger: 'blur'}],
           // telephone: [{required: true, message: '电话号码不能为空', trigger: 'blur'}],
-          personid: [{type:"number",required: true, message: '组织ID不能为空',trigger: 'blur'}]
+          // personid: [{type:"number",required: true, message: '组织ID不能为空',trigger: 'blur'}]
         },
         joblist:[],
         deptlist:[],

@@ -28,10 +28,15 @@
           width="80">
         </el-table-column>
         <el-table-column
+          label="序号"
+          width="200">
+          <template scope="scope"><span>{{scope.$index+(currentPage - 1) * length + 1}} </span></template>
+        </el-table-column>
+        <el-table-column
           prop="organ_id"
           label="组织ID"
           width="200"
-          sortable
+          v-if="false"
         >
         </el-table-column>
         <el-table-column
@@ -111,7 +116,7 @@
         //数据总条目
         total: 0,
         //每页显示多少条数据
-        length: 3,
+        length: 4,
         //请求时的loading效果
         load_data: false,
         //批量选择数组

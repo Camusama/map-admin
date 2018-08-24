@@ -26,23 +26,35 @@
           width="55">
         </el-table-column>
         <el-table-column
+          label="序号"
+          width="80">
+          <template scope="scope"><span>{{scope.$index+(currentPage - 1) * length + 1}} </span></template>
+        </el-table-column>
+        <el-table-column
           prop="logid"
           label="日志ID"
-          width="100"
-          sortable
+          width="120"
+          v-if="false"
         >
         </el-table-column>
         <el-table-column
           prop="username"
           label="用户名"
-          width="180"
+          width="120"
           sortable
         >
         </el-table-column>
         <el-table-column
           prop="ip"
           label="IP地址"
-          width="216"
+          width="180"
+          sortable
+        >
+        </el-table-column>
+        <el-table-column
+          prop="createtime"
+          label="时间"
+          width="195"
           sortable
         >
         </el-table-column>
@@ -55,21 +67,21 @@
         <el-table-column
           prop="method"
           label="方法"
-          width="177"
+          width="195"
           sortable
         >
         </el-table-column>
         <el-table-column
           prop="loglevel"
           label="消息等级"
-          width="200"
+          width="150"
           sortable
         >
         </el-table-column>
         <el-table-column
           prop="msg"
           label="操作详情"
-          width="250"
+          width="200"
         >
         </el-table-column>
         <el-table-column

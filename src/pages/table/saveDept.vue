@@ -7,7 +7,7 @@
       <el-row>
         <el-col :span="8">
           <el-form ref="form" :model="form" :rules="rules" label-width="100px">
-            <el-form-item label="部门ID:" prop="dept_id">
+            <el-form-item label="部门ID:" prop="dept_id" v-if="false">
               <el-input :disabled="flag" v-model.number="form.dept_id" placeholder="请输入内容" style="width: 250px;"></el-input>
             </el-form-item>
             <el-form-item label="部门名称:" prop="dept_name">
@@ -54,7 +54,7 @@
         on_submit_loading: false,
         rules: {
           dept_name: [{required: true, message: '部门名称不能为空', trigger: 'blur'}],
-          dept_id: [{type:"number",required: true, message: '部门ID不能为空', trigger: 'blur'}],
+          // dept_id: [{type:"number",required: true, message: '部门ID不能为空', trigger: 'blur'}],
           organ_id: [{type:"number",required: true, message: '所属组织不能为空', trigger: 'blur'}],
         },
         organlist:[]

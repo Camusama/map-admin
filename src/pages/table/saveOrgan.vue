@@ -7,7 +7,7 @@
       <el-row>
         <el-col :span="8">
           <el-form ref="form" :model="form" :rules="rules" label-width="100px">
-            <el-form-item label="组织ID:" prop="organ_id">
+            <el-form-item label="组织ID:" prop="organ_id" v-if="false">
               <el-input :disabled="flag" type="number" v-model.number="form.organ_id" placeholder="请输入内容" style="width: 250px;"></el-input>
             </el-form-item>
             <el-form-item label="组织名称:" prop="organ_name">
@@ -43,7 +43,7 @@
         on_submit_loading: false,
         rules: {
           organ_name: [{required: true, message: '请输入组织名称',trigger: 'blur'}],
-          organ_id: [{type:"number",required: true, message: '请输入组织ID',trigger: 'blur'}]
+          // organ_id: [{type:"number",required: true, message: '请输入组织ID',trigger: 'blur'}]
         }
       }
     },

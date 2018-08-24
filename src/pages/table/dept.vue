@@ -29,10 +29,15 @@
           width="55">
         </el-table-column>
         <el-table-column
+          label="序号"
+          width="100">
+          <template scope="scope"><span>{{scope.$index+(currentPage - 1) * length + 1}} </span></template>
+        </el-table-column>
+        <el-table-column
           prop="dept_id"
           label="部门ID"
           width="100"
-          sortable
+          v-if="false"
         >
         </el-table-column>
         <el-table-column
