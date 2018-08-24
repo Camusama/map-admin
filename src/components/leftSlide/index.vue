@@ -68,7 +68,7 @@
             path: "/table/base"
           },{
             title: "日志管理",
-            path: "/table/sort"
+            path: "/table/log"
           }]
         }, {
           title: "功能管理",

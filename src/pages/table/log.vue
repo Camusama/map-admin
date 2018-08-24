@@ -4,17 +4,13 @@
       <el-button @click.stop="on_refresh" size="small">
         <i class="fa fa-refresh"></i>
       </el-button>
-      <router-link :to="{name: 'tableAdd'}" tag="span">
-        <el-button type="primary" icon="plus" size="small">添加数据</el-button>
-      </router-link>
     </panel-title>
     <div class="panel-body">
       <div style="width: 30%;margin-bottom: 20px">
         <el-input placeholder="请输入内容" v-model="searchkey" class="input-with-select">
           <el-select v-model="searchid" slot="prepend" placeholder="请选择方式" style="width: 130px;">
             <el-option label="按用户名查询" value="username"></el-option>
-            <el-option label="按姓名查询" value="name"></el-option>
-            <el-option label="按岗位查询" value="job"></el-option>
+            <el-option label="按操作详情查询" value="msg"></el-option>
           </el-select>
           <el-button slot="append" @click="submit_search"><i class="fa fa-search" aria-hidden="true"></i></el-button>
         </el-input>
@@ -30,66 +26,57 @@
           width="55">
         </el-table-column>
         <el-table-column
-          prop="personid"
-          label="id"
-          width="80"
+          prop="logid"
+          label="日志ID"
+          width="100"
           sortable
         >
         </el-table-column>
         <el-table-column
           prop="username"
           label="用户名"
-          width="120"
+          width="180"
           sortable
         >
         </el-table-column>
         <el-table-column
-          prop="relname"
-          label="姓名"
-          width="130"
+          prop="ip"
+          label="IP地址"
+          width="216"
           sortable
         >
         </el-table-column>
         <el-table-column
-          prop="gender"
-          label="性别"
-          width="120"
+          prop="classfn"
+          label="接口"
+          width="360"
         >
         </el-table-column>
         <el-table-column
-          prop="telephone"
-          label="联系方式"
-          width="177px"
+          prop="method"
+          label="方法"
+          width="177"
           sortable
         >
         </el-table-column>
         <el-table-column
-          prop="email"
-          label="E-MAIL"
-          width="250px"
+          prop="loglevel"
+          label="消息等级"
+          width="200"
           sortable
         >
         </el-table-column>
         <el-table-column
-          prop="jobDescr"
-          label="岗位"
-          width="400px"
+          prop="msg"
+          label="操作详情"
+          width="250"
         >
-        </el-table-column>
-        <el-table-column
-          prop="isadmin"
-          label="是否管理员"
-          width="120">
-
         </el-table-column>
         <el-table-column
           label="操作"
-          width="180">
+          width="100">
           <template scope="props">
-            <router-link :to="{name: 'tableUpdate', params: {personid:props.row.personid}}" tag="span">
-              <el-button type="info" size="small" icon="edit">修改</el-button>
-            </router-link>
-            <el-button type="danger" size="small" icon="delete" @click="delete_data(props.row.personid)">删除</el-button>
+            <el-button type="danger" size="small" icon="delete" @click="delete_data(props.row.logid)">删除</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -126,11 +113,10 @@
   import axios from 'axios'
   import {mapGetters} from 'vuex'
   import {GET_USER_INFO} from 'store/getters/type'
-  const url ="/api/personserver"
+  const url ="/api/loginfoserver"
   export default{
     data(){
       return {
-        personid:null,
         idlist:"",
         searchkey:"",
         searchid:"",
@@ -158,7 +144,6 @@
     },
     created(){
       this.get_table_data()
-      this.personid=this.get_user_info.user.personid
     },
     methods: {
       lengthchange(){
@@ -186,7 +171,7 @@
         }else if(this.searchid === "username"){
           axios.get(url,{
             params:{
-              method:"searchByusername",
+              method:"searchByUser",
               page: this.currentPage,
               length: this.length,
               username:this.searchkey
@@ -199,13 +184,13 @@
             setTimeout(1000)
             this.load_data = false
           })
-        }else if(this.searchid === "name"){
+        }else if(this.searchid === "msg"){
           axios.get(url,{
             params:{
-              method:"searchByname",
+              method:"searchByMsg",
               page: this.currentPage,
               length: this.length,
-              realname:this.searchkey
+              msg:this.searchkey
             }
           }).then((res)=>{
             // console.log(res)
@@ -216,49 +201,32 @@
             this.load_data = false
           })
 
-        }else if (this.searchid === "job"){
-          axios.get(url,{
-            params:{
-              method:"searchByjob",
-              page: this.currentPage,
-              length: this.length,
-              jobname:this.searchkey
-            }
-          }).then((res)=>{
-            // console.log(res)
-            this.table_data=res.data.result
-            this.page=res.data.page
-            this.total = res.data.total
-            setTimeout(1000)
-            this.load_data = false
-          })
         }
       },
       on_refresh(){
-
         this.get_table_data()
       },
       //获取数据
       // $fetch.api_table 等于api/index.js
       get_table_data(){
         this.load_data = true
-       axios.get(url,{
-         params:{
-           method:"personList",
-           page: this.currentPage,
-           length: this.length
-         }
-       }).then((res)=>{
-           // console.log(res)
-           this.table_data=res.data.result
-           this.page=res.data.page
-           this.total = res.data.total
-           setTimeout(1000)
-           this.load_data = false
-         })
+        axios.get(url,{
+          params:{
+            method:"logList",
+            page: this.currentPage,
+            length: this.length
+          }
+        }).then((res)=>{
+          // console.log(res)
+          this.table_data=res.data.result
+          this.page=res.data.page
+          this.total = res.data.total
+          setTimeout(1000)
+          this.load_data = false
+        })
       },
       //单个删除
-      delete_data(personid){
+      delete_data(logid){
         this.$confirm('此操作将删除该数据, 是否继续?', '提示', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
@@ -268,8 +236,8 @@
             this.load_data = true
             axios.get(url,{
               params:{
-                method:"delPerson",
-                personid:personid,
+                method:"delLog",
+                logid:logid,
               }
             })
               .then((res) => {
@@ -323,12 +291,12 @@
           .then(() => {
             this.load_data = true
             this.batch_select.forEach ((item)=>{
-                this.idlist+=item.personid+","
-              })
-              console.log(this.idlist)
+              this.idlist+=item.logid+","
+            })
+            console.log(this.idlist)
             axios.get(url,{
               params:{
-                method:"delPersonArray",
+                method:"delLoglist",
                 list:this.idlist,
               }
             })

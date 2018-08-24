@@ -17,12 +17,9 @@ import noPageComponent from 'pages/error/404'
 import loginComponent from 'pages/user/login'
 //base table
 import baseTableComponent from 'pages/table/base'
-//sort table
-import sortTableComponent from 'pages/table/sort'
-//save table
+
+import Log from 'pages/table/log'
 import saveTableComponent from 'pages/table/save'
-
-
 import Dept from 'pages/table/dept'
 import Job from 'pages/table/job'
 import Organization from 'pages/table/organization'
@@ -100,11 +97,11 @@ const routes = [{
       auth:true
     }
   },{
-    path: '/table/sort',
-    name: 'tableSort',
-    component: sortTableComponent,
+    path: '/table/Log',
+    name: 'Log',
+    component: Log,
     meta: {
-      title: "排序表格",
+      title: "日志管理",
       auth: true
     }
   }, {
