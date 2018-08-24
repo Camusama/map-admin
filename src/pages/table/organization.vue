@@ -50,7 +50,7 @@
               <div style="margin-top:4px;display: flex;justify-content:space-between;border-bottom: 1px solid #dfe6ec;
               padding: 1px 3px;">
                 {{v.dept_name}}
-                <el-button plain  size="mini" icon="delete" @click="delete_dept(v.dept_id,scope.row.organ_id)"></el-button>
+                <el-button plain  size="mini" icon="delete" @click="delete_dept(v.dept_id)"></el-button>
               </div>
             </div>
           </template>
@@ -103,6 +103,7 @@
   export default{
     data(){
       return {
+        idlist:"",
         searchkey:"",
         searchid:"",
         //当前页码
@@ -182,23 +183,40 @@
             this.total = res.data.total
             setTimeout(this.load_data = false,2000)
           })
-       //  this.$fetch.api_table.list({
-       //    page: this.currentPage,
-       //    length: this.length
-       //  })
-       //    .then((res) => {
-       //      console.log(res)
-       //      this.table_data = res.data.result
-       //      this.currentPage = res.data.page
-       //      this.total = res.data.total
-       //      this.load_data = false
-       //    })
-       //    .catch(() => {
-       //      this.load_data = false
-       //    })
       },
-      delete_dept(deptid,organid){
+      delete_dept(deptid){
+        this.$confirm('此操作将删除该数据, 是否继续?', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        })
+          .then(() => {
+            this.load_data = true
+            axios.get("/api/deptserver",{
+              params:{
+                method:"delDept",
+                dept_id:deptid ,
+              }
+            }).then((res) => {
+              this.$message.success(res.data)
+              this.load_data = false
+              this.on_refresh()
+            })
+              .catch((err) => {
+                this.load_data = false
+                var message =""
+                if(err.response.status === 404){
+                  message="删除失败！"
+                }
+                this.$notify.info({
+                  title: '温馨提示',
+                  message:message,
+                })
+              })
 
+          })
+          .catch(() => {
+          })
       },
       delete_organ(organid){
         this.$confirm('此操作将删除该数据, 是否继续?', '提示', {
@@ -221,39 +239,17 @@
             })
           })
       },
-      // //单个删除
-      // delete_data(item){
-      //   this.$confirm('此操作将删除该数据, 是否继续?', '提示', {
-      //     confirmButtonText: '确定',
-      //     cancelButtonText: '取消',
-      //     type: 'warning'
-      //   })
-      //     .then(() => {
-      //       this.load_data = true
-      //       this.$fetch.api_table.del(item)
-      //         .then((res) => {
-      //           console.log(res)
-      //           this.get_table_data()
-      //           this.$message.success(res.data)
-      //           this.load_data=false
-      //           this.on_refresh()
-      //         })
-      //         .catch(() => {
-      //         })
-      //     })
-      //     .catch(() => {
-      //     })
-      // },
-      //页码选择
       handleCurrentChange(val) {
         this.currentPage = val
-        this.get_table_data()
+        if(this.searchid !== ""&& this.searchkey!==""){
+          this.submit_search()
+        }else if (this.searchkey === ""){
+          this.get_table_data()
+        }
       },
       //批量选择
       on_batch_select(val){
-        val.forEach ((item)=>{
-          this.batch_select.push(item.organ_id)
-        })
+        this.batch_select = val
       },
       //批量删除
       on_batch_del(){
@@ -264,13 +260,33 @@
         })
           .then(() => {
             this.load_data = true
-            this.$fetch.api_table.batch_del(this.batch_select)
-              .then(({msg}) => {
-                this.get_table_data()
-                this.$message.success(msg)
+            this.batch_select.forEach ((item)=>{
+              this.idlist+=item.organ_id+","
+            })
+            axios.get(url, {
+              params: {
+                method: "delOrganlist",
+                list: this.idlist,
+              }
+            })
+              .then((res) => {
+                // console.log(res)
+                this.$message.success(res.data)
+                this.load_data = false
+                this.on_refresh()
               })
-              .catch(() => {
+              .catch((err) => {
+                this.load_data = false
+                var message = ""
+                if (err.response.status === 404) {
+                  message = "删除失败！"
+                }
+                this.$notify.info({
+                  title: '温馨提示',
+                  message: message,
+                })
               })
+
           })
           .catch(() => {
           })
