@@ -19,13 +19,20 @@ import Plugins from 'plugins'
 import App from './App'
 //导入mock数据
 import './mock'
-
+import $ from 'jquery'
 import BaiduMap from 'vue-baidu-map'
 
 Vue.use(BaiduMap, {
   // ak 是在百度地图开发者平台申请的密钥
   ak: '6YgDBZwDGgopmLbFje1zpiZBfa10pcAl'
 })
+import  VueQuillEditor from 'vue-quill-editor'
+// require styles 引入样式
+import 'quill/dist/quill.core.css'
+import 'quill/dist/quill.snow.css'
+import 'quill/dist/quill.bubble.css'
+
+Vue.use(VueQuillEditor)
 //使用element-ui
 Vue.use(ElementUI)
 

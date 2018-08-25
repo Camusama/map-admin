@@ -274,6 +274,7 @@
               this.$message.success(res.data)
               this.load_data = false
               this.on_refresh()
+              this.idlist=[]
             })
             .catch((err) => {
               this.load_data = false

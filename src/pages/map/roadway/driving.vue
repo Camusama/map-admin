@@ -25,21 +25,21 @@
             <i class="fa fa-search" aria-hidden="true"></i>
           </el-button>
         </el-input>
-        <el-input
-          class="input ip3"
-          placeholder="请输入起始城市"
-          v-model="startlocal"
-          clearable>
-        </el-input>
-        <el-input
-          class="input ip4"
-          placeholder="请输入目的城市"
-          v-model="endlocal"
-          clearable>
-          <el-button slot="append" @click="handleLocation">
-            <i class="fa fa-search" aria-hidden="true"></i>
-          </el-button>
-        </el-input>
+        <!--<el-input-->
+          <!--class="input ip3"-->
+          <!--placeholder="请输入起始城市"-->
+          <!--v-model="startlocal"-->
+          <!--clearable>-->
+        <!--</el-input>-->
+        <!--<el-input-->
+          <!--class="input ip4"-->
+          <!--placeholder="请输入目的城市"-->
+          <!--v-model="endlocal"-->
+          <!--clearable>-->
+          <!--<el-button slot="append" @click="handleLocation">-->
+            <!--<i class="fa fa-search" aria-hidden="true"></i>-->
+          <!--</el-button>-->
+        <!--</el-input>-->
       </div>
     </div>
   </div>

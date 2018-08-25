@@ -36,6 +36,9 @@ import News from 'pages/monitor/news'
 import Tips from 'pages/monitor/tips'
 import NewsDetail from 'pages/monitor/newsDetail'
 import TipsDetail from 'pages/monitor/tipsDetail'
+import NewsEdit from 'pages/monitor/NewsEdit'
+import TipsEdit from 'pages/monitor/tipsEdit'
+
 
 Vue.use(VueRouter)
 
@@ -113,11 +116,27 @@ const routes = [{
       auth: true
     }
   },{
-    path: '/monitor/newsDetail/:id',
+    path: '/monitor/newsDetail/:news_id',
     name: 'newsDetail',
     component: NewsDetail,
     meta: {
       title: "新闻详情",
+      auth: true
+    }
+  },{
+    path: '/monitor/newsEdit/:news_id',
+    name: 'newsEdit',
+    component: NewsEdit,
+    meta: {
+      title: "新闻编辑",
+      auth: true
+    }
+  },{
+    path: '/monitor/addNews',
+    name: 'addNews',
+    component: NewsEdit,
+    meta: {
+      title: "添加新闻",
       auth: true
     }
   },
@@ -130,14 +149,30 @@ const routes = [{
       auth: true
     }
   },{
-    path: '/monitor/tipsDetail/:id',
+    path: '/monitor/tipsDetail/:inform_id',
     name: 'tipsDetail',
     component: TipsDetail,
     meta: {
       title: "公告详情",
       auth: true
     }
-  },
+  },{
+      path: '/monitor/tipsEdit/:inform_id',
+      name: 'tipsEdit',
+      component: TipsEdit,
+      meta: {
+        title: "公告编辑",
+        auth: true
+      }
+    },{
+      path: '/monitor/addTips',
+      name: 'addTips',
+      component: TipsEdit,
+      meta: {
+        title: "添加公告",
+        auth: true
+      }
+    },
     {
     path: '/table/update/:personid',
     name: 'tableUpdate',

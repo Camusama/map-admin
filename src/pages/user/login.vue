@@ -16,6 +16,7 @@
             <el-input type="password" v-model="form.password" placeholder="请输入账户密码：" class="form-input"></el-input>
           </el-form-item>
           <el-checkbox v-model="checked" class="checkbox" label="记住我"></el-checkbox>
+          <check @change="handleLetterChange"></check>
           <el-form-item class="login-item">
             <el-button size="large" icon="check" class="form-submit" @click="submit_form"></el-button>
           </el-form-item>
@@ -28,6 +29,7 @@
   import {mapActions} from 'vuex'
   import {port_user, port_code} from 'common/port_uri'
   import {SET_USER_INFO} from 'store/actions/type'
+  import Check from "./check"
 //  设置记住我
   import {cookieStorage} from 'common/storage'
   const url="/api/logserver"
@@ -35,8 +37,12 @@
 
 
   export default{
+    components:{
+      Check
+    },
     data(){
       return {
+        flag:false,
         checked:false,
         form: {
           username: null,
@@ -57,10 +63,20 @@
       ...mapActions({
         set_user_info: SET_USER_INFO
       }),
+      handleLetterChange(){
+        this.flag=true
+      },
       //提交
       submit_form() {
         this.$refs.form.validate((valid) => {
           if (!valid) return false
+          if(!this.flag){
+            this.$notify.info({
+              title: '温馨提示',
+              message:"请完成验证",
+            })
+            return false
+          }
           this.load_data = true
           //登录提交
           cookieStorage.set('checked', this.checked)

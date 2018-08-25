@@ -4,7 +4,7 @@
       <el-button @click.stop="on_refresh" size="small">
         <i class="fa fa-refresh"></i>
       </el-button>
-      <router-link :to="{name: 'addJob'}" tag="span">
+      <router-link :to="{name: 'addNews'}" tag="span">
         <el-button type="primary" icon="plus" size="small">添加数据</el-button>
       </router-link>
     </panel-title>
@@ -12,8 +12,8 @@
       <div style="width: 30%;margin-bottom: 20px">
         <el-input placeholder="请输入内容" v-model="searchkey" class="input-with-select">
           <el-select v-model="searchid" slot="prepend" placeholder="请选择方式" style="width: 130px;">
-            <el-option label="按岗位名查询" value="jobname"></el-option>
-            <el-option label="按部门名查询" value="deptname"></el-option>
+            <el-option label="按作者查询" value="name"></el-option>
+            <el-option label="按标题查询" value="title"></el-option>
           </el-select>
           <el-button slot="append" @click="submit_search"><i class="fa fa-search" aria-hidden="true"></i></el-button>
         </el-input>
@@ -29,50 +29,62 @@
           width="55">
         </el-table-column>
         <el-table-column
-          prop="job_id"
-          label="新闻ID"
-          width="150"
+          label="序号"
+          width="80">
+          <template scope="scope"><span>{{scope.$index+(currentPage - 1) * length + 1}} </span></template>
+        </el-table-column>
+        <el-table-column
+          prop="news_id"
+          label="id"
+          width="80"
+          v-if="false"
           sortable
         >
         </el-table-column>
         <el-table-column
-          prop="job_name"
+          prop="newstitle"
           label="新闻标题"
-          width="300"
+          width="500"
         >
         </el-table-column>
         <el-table-column
-          prop="dept_name"
-          label="作者"
-          width="250"
-        >
-        </el-table-column>
-        <el-table-column
-          prop="organ_name"
-          label="关键词"
-          width="200"
-        >
-        </el-table-column>
-        <el-table-column
-          prop="organ_name"
+          prop="createtime"
           label="创建时间"
-          width="200"
+          width="250"
+          sortable
         >
         </el-table-column>
         <el-table-column
-          prop=""
-          label="HOT"
-          width="200"
+          prop="newsauthor"
+          label="作者"
+          width="150"
         >
+        </el-table-column>
+        <el-table-column
+          prop="keyword"
+          label="关键词"
+          width="300"
+          sortable
+        >
+        </el-table-column>
+        <el-table-column
+          prop="hot"
+          label="是否HOT"
+          width="120"
+          sortable
+        >
+          <template scope="props">
+            <span v-text="props.row.hot == 1 ? '是' : '否'"></span>
+          </template>
         </el-table-column>
         <el-table-column
           label="操作"
-          width="165">
+          width="180">
           <template scope="props">
-            <router-link :to="{name: 'saveJob', params: {job_id: props.row.job_id}}" tag="span">
+            <router-link :to="{name: 'newsEdit', params: {news_id:props.row.news_id}}" tag="span">
               <el-button type="info" size="small" icon="edit">修改</el-button>
             </router-link>
-            <el-button type="danger" size="small" icon="delete" @click="delete_job(props.row.job_id)">删除</el-button>
+            <el-button type="danger" size="small" icon="delete" @click="delete_data(props.row.news_id)">删除</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -89,7 +101,7 @@
         <div slot="page">
           <div style="width: 120px;transform: translate(-110px,26px);color:#48576a;font-size: 14px">
             每页显示
-            <el-input ref="iplength" v-model="length" max="99" min="3" size="mini" @blur="lengthchange" style="width:40px;"></el-input>
+            <el-input ref="iplength" v-model.number="length" max="99" min="3" size="mini" @blur="lengthchange" style="width:40px;"></el-input>
             条
           </div>
           <el-pagination
@@ -107,13 +119,17 @@
 <script type="text/javascript">
   import {panelTitle, bottomToolBar} from 'components'
   import axios from 'axios'
-  const url ="/api/jobserver"
+  import {mapGetters} from 'vuex'
+  import {GET_USER_INFO} from 'store/getters/type'
+  const url ="/api/newserver"
   export default{
     data(){
       return {
+        news_id:null,
         idlist:"",
         searchkey:"",
         searchid:"",
+        table_data: null,
         //当前页码
         currentPage: 1,
         //数据总条目
@@ -121,11 +137,15 @@
         //每页显示多少条数据
         length: 10,
         //请求时的loading效果
-        load_data: false,
+        load_data: true,
         //批量选择数组
-        batch_select: [],
-        table_data: null,
+        batch_select: []
       }
+    },
+    computed:{
+      ...mapGetters({
+        get_user_info: GET_USER_INFO
+      })
     },
     components: {
       panelTitle,
@@ -133,13 +153,14 @@
     },
     created(){
       this.get_table_data()
+      this.personid=this.get_user_info.user.personid
     },
     methods: {
       lengthchange(){
         var  val =this.$refs.iplength.value
         if(parseInt(this.$refs.iplength.value)){
-          if(val>20){
-            this.length=20
+          if(val>40){
+            this.length=30
           }else if(val<3){
             this.length=3
           }else{
@@ -157,13 +178,13 @@
       submit_search() {
         if (this.searchkey === ""){
           this.get_table_data()
-        }else if(this.searchid === "jobname"){
+        }else if(this.searchid === "name"){
           axios.get(url,{
             params:{
-              method:"searchByjobname",
+              method:"searchByauthor",
               page: this.currentPage,
               length: this.length,
-              jobname:this.searchkey
+              keyword:this.searchkey
             }
           }).then((res)=>{
             // console.log(res)
@@ -173,13 +194,13 @@
             setTimeout(1000)
             this.load_data = false
           })
-        }else if (this.searchid === "deptname"){
+        }else if(this.searchid === "title"){
           axios.get(url,{
             params:{
-              method:"searchBydeptname",
+              method:"searchBytitle",
               page: this.currentPage,
               length: this.length,
-              deptname:this.searchkey
+              title:this.searchkey
             }
           }).then((res)=>{
             // console.log(res)
@@ -189,9 +210,12 @@
             setTimeout(1000)
             this.load_data = false
           })
+
         }
+
       },
       on_refresh(){
+
         this.get_table_data()
       },
       //获取数据
@@ -200,7 +224,7 @@
         this.load_data = true
         axios.get(url,{
           params:{
-            method:"jobList",
+            method:"newsList",
             page: this.currentPage,
             length: this.length
           }
@@ -208,12 +232,13 @@
           // console.log(res)
           this.table_data=res.data.result
           this.page=res.data.page
-          this.total = res.data.total
+          this.total = res.data.total-1
           setTimeout(1000)
           this.load_data = false
         })
       },
-      delete_job(jobid){
+      //单个删除
+      delete_data(news_id){
         this.$confirm('此操作将删除该数据, 是否继续?', '提示', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
@@ -223,8 +248,8 @@
             this.load_data = true
             axios.get(url,{
               params:{
-                method:"delJob",
-                jobid:jobid,
+                method:"delNews",
+                newsid:news_id,
               }
             })
               .then((res) => {
@@ -244,6 +269,8 @@
                   message:message,
                 })
               })
+          })
+          .catch(() => {
           })
       },
       //页码选择
@@ -265,36 +292,39 @@
           confirmButtonText: '确定',
           cancelButtonText: '取消',
           type: 'warning'
-        }).then(() => {
-          this.load_data = true
-          this.batch_select.forEach ((item)=>{
-            this.idlist+=item.job_id+","
-          })
-          axios.get(url, {
-            params: {
-              method: "delJoblist",
-              list: this.idlist,
-            }
-          })
-            .then((res) => {
-              // console.log(res)
-              this.$message.success(res.data)
-              this.load_data = false
-              this.on_refresh()
-            })
-            .catch((err) => {
-              this.load_data = false
-              var message = ""
-              if (err.response.status === 404) {
-                message = "删除失败！"
-              }
-              this.$notify.info({
-                title: '温馨提示',
-                message: message,
-              })
-            })
         })
+          .then(() => {
+            this.load_data = true
+            this.batch_select.forEach ((item)=>{
+              this.idlist+=item.news_id+","
+            })
+            axios.get(url,{
+              params:{
+                method:"delNewslist",
+                list:this.idlist,
+              }
+            })
+              .then((res) => {
+                this.$message.success(res.data)
+                this.load_data = false
+                this.on_refresh()
+                this.idlist=[]
+              })
+              .catch((err) => {
+                this.load_data = false
+                var message =""
+                if(err.response.status === 404){
+                  message="删除失败！"
+                }
+                this.$notify.info({
+                  title: '温馨提示',
+                  message:message,
+                })
+              })
 
+          })
+          .catch(() => {
+          })
       }
     }
   }
