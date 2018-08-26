@@ -16,14 +16,16 @@
           </el-button>
           <div class="postcontent">
             <h3>
-              <a href="">{{item.infotitle}}</a>
+              <router-link :to="{name: 'tipsDetail', params: {inform_id:item.inform_id}}" tag="a">
+                {{item.infotitle}}
+              </router-link>
             </h3>
             <hr>
             <p>
-              <span class="author" style="margin-right: 56%">
+              <span class="author">
                 {{item.infoname}}
               </span>
-              <span>
+              <span style="float: right">
                 {{item.infotime}}
               </span>
             </p>
@@ -51,8 +53,10 @@
             <i class="fa fa-refresh"></i>
           </el-button>
         </div>
-        <div v-for="item in newsList" class="text item" style="font-size: 16px">
-          {{item.newstitle }}
+        <div v-for="item in newsList" class="text item" style="font-size: 16px;cursor: pointer">
+          <router-link :to="{name: 'newsDetail', params: {news_id:item.news_id}}" tag="span">
+            {{item.newstitle }}
+          </router-link>
           <i class="fa fa-fire" aria-hidden="true" v-if="item.hot" style="color:darkred;float: right;"></i>
           <hr>
         </div>
@@ -75,13 +79,12 @@
         </div>
         <todo-list></todo-list>
       </el-card>
-      <el-card class="box-card" style="margin-top:40px;width: 27.8%;float: left">
+      <el-card class="box-card" style="margin-top:40px;width: 27.8%;float: left" :body-style="{ padding: '0px' }">
         <div slot="header" class="clearfix">
           <i class="fa fa-map-marker fa-lg" aria-hidden="true"></i>
-          <span>地图</span>
+          <span>地图定位</span>
         </div>
-        <baidu-map id="map" center="武汉" :zoom="15" :scroll-wheel-zoom="true">
-          <bm-map-type :map-types="['BMAP_NORMAL_MAP', 'BMAP_HYBRID_MAP']" anchor="RIGHT"></bm-map-type>
+        <baidu-map id="map" :center="{lng: 114.361675, lat: 30.480878}" :zoom="15" :scroll-wheel-zoom="true">
           <bm-geolocation anchor="BMAP_ANCHOR_TOP_LEFT" :showAddressBar="true" :autoLocation="true"></bm-geolocation>
         </baidu-map>
       </el-card>
@@ -131,7 +134,7 @@
             length: this.tiplength
           }
         }).then((res)=>{
-          console.log(res)
+          // console.log(res)
           this.tipList=res.data.result
           this.tipcurrentPage=res.data.page
           this.tiptotal = res.data.total

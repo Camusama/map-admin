@@ -1,6 +1,5 @@
 <template>
-  <el-container>
-    <el-main class="container">
+    <div class="container">
       <el-input placeholder="回车添加待办事项" class="todoinput" @keyup.enter.native="add" v-model="newtodo.content"></el-input>
       <p style="font-size: 16px">进行中：{{ todolist.length }} 已完成：{{ donenum }}</p>
       <el-row v-for="(item, index) in todolist" class="list-row">
@@ -14,8 +13,7 @@
           <i class="el-icon-close" @click="del(index)"></i>
         </el-col>
       </el-row>
-    </el-main>
-  </el-container>
+    </div>
 </template>
 
 <script>

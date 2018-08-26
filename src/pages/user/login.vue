@@ -5,7 +5,8 @@
          element-loading-text="正在登陆中..."
          @keyup.enter="submit_form">
       <div class="login-title">
-        <img src="./images/login_logo.png"/>
+        <img src="./images/login_logo.png" style="width: 118px;height: 113px;"/>
+        <!--<div style="color: #6bc5a4;font-weight: bold">智慧武汉后台管理系统</div>-->
       </div>
       <div class="login-form">
         <el-form ref="form" :model="form" :rules="rules" label-width="0">
