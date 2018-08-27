@@ -26,6 +26,7 @@
         @selection-change="on_batch_select">
         <el-table-column
           type="selection"
+          :selectable="selectable"
           width="55">
         </el-table-column>
         <el-table-column
@@ -62,7 +63,7 @@
               <div style="margin-top:4px;display: flex;justify-content:space-between;border-bottom: 1px solid #dfe6ec;
               padding: 1px 3px;">
                 {{v.jobname}}
-                <el-button plain  size="mini" icon="delete" @click="delete_job(v.jobid)"></el-button>
+                <el-button plain v-if="v.jobid!=get_user_info.user.jobid"  size="mini" icon="delete" @click="delete_job(v.jobid)"></el-button>
               </div>
             </div>
           </template>
@@ -74,7 +75,7 @@
             <router-link :to="{name: 'saveDept', params: {dept_id: props.row.dept_id}}" tag="span">
               <el-button type="info" size="small" icon="edit">修改</el-button>
             </router-link>
-            <el-button type="danger" size="small" icon="delete" @click="delete_dept(props.row.dept_id)">删除</el-button>
+            <el-button v-if="props.row.dept_id != get_user_info.dept_id" type="danger" size="small" icon="delete" @click="delete_dept(props.row.dept_id)">删除</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -147,6 +148,13 @@
       }
     },
     methods: {
+      selectable(row){
+        if(row.dept_id!=this.get_user_info.dept_id){
+          return true
+        }else{
+          return false
+        }
+      },
       lengthchange(){
         var  val =this.$refs.iplength.value
         if(parseInt(this.$refs.iplength.value)){

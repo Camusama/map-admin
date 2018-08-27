@@ -26,6 +26,7 @@
         @selection-change="on_batch_select">
         <el-table-column
           type="selection"
+          :selectable="selectable"
           width="55">
         </el-table-column>
         <el-table-column
@@ -65,7 +66,7 @@
             <router-link :to="{name: 'saveJob', params: {job_id: props.row.job_id}}" tag="span">
               <el-button type="info" size="small" icon="edit">修改</el-button>
             </router-link>
-            <el-button type="danger" size="small" icon="delete" @click="delete_job(props.row.job_id)">删除</el-button>
+            <el-button v-if="props.row.job_id!=get_user_info.user.jobid" type="danger" size="small" icon="delete" @click="delete_job(props.row.job_id)">删除</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -138,6 +139,13 @@
       }
     },
     methods: {
+      selectable(row){
+        if(row.job_id!=this.get_user_info.user.jobid){
+          return true
+        }else{
+          return false
+        }
+      },
       lengthchange(){
         var  val =this.$refs.iplength.value
         if(parseInt(this.$refs.iplength.value)){

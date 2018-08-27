@@ -235,7 +235,7 @@
           console.log(res)
           this.table_data=res.data.result
           this.page=res.data.page
-          this.total = res.data.total-1
+          this.total = res.data.total
           setTimeout(1000)
           this.load_data = false
         })

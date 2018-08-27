@@ -153,7 +153,7 @@
         }).then((res)=>{
           this.newsList=res.data.result
           this.newscurrentPage=res.data.page
-          this.newstotal = res.data.total-1
+          this.newstotal = res.data.total
           setTimeout(1000)
           this.load_data = false
         })

@@ -25,6 +25,7 @@
         @selection-change="on_batch_select">
         <el-table-column
           type="selection"
+          :selectable="selectable"
           width="80">
         </el-table-column>
         <el-table-column
@@ -55,7 +56,7 @@
               <div style="margin-top:4px;display: flex;justify-content:space-between;border-bottom: 1px solid #dfe6ec;
               padding: 1px 3px;">
                 {{v.dept_name}}
-                <el-button plain  size="mini" icon="delete" @click="delete_dept(v.dept_id)"></el-button>
+                <el-button v-if="v.dept_id!=get_user_info.dept_id" plain  size="mini" icon="delete" @click="delete_dept(v.dept_id)"></el-button>
               </div>
             </div>
           </template>
@@ -67,7 +68,7 @@
             <router-link :to="{name: 'saveOrgan', params: {organ_id: props.row.organ_id}}" tag="span">
               <el-button type="info" size="small" icon="edit">修改</el-button>
             </router-link>
-            <el-button type="danger" size="small" icon="delete" @click="delete_organ(props.row.organ_id)">删除</el-button>
+            <el-button v-if="props.row.organ_id != get_user_info.organ_id" type="danger" size="small" icon="delete" @click="delete_organ(props.row.organ_id)">删除</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -141,8 +142,16 @@
       if(!this.get_user_info.user.isadmin){
         this.$router.replace({path:'/403'})
       }
+      console.log(this.get_user_info.organ_id)
     },
     methods: {
+      selectable(row){
+        if(row.organ_id!=this.get_user_info.organ_id){
+          return true
+        }else{
+          return false
+        }
+      },
       lengthchange(){
         var  val =this.$refs.iplength.value
         if(parseInt(this.$refs.iplength.value)){

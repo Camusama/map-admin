@@ -98,7 +98,9 @@
             }
             this.set_user_info({
               user: res.data.data,
-              login: true
+              login: true,
+              dept_id:res.data.dept_id,
+              organ_id:res.data.organ_id
             })
             this.$message.success("登录成功")
             setTimeout(this.$router.push({path: '/'}), 500)
