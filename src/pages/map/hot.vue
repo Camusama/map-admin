@@ -3,6 +3,7 @@
     <panel-title :title="$route.meta.title"></panel-title>
     <div class="panel-body">
       <el-menu class="el-menu-demo"
+               default-active="公交"
                @select="handleSelect"
                style="margin-bottom:10px;height:601px;float: left">
         <el-menu-item index="公交"><i class="fa fa-train" aria-hidden="true"></i>&nbsp;交通设施</el-menu-item>
@@ -34,7 +35,7 @@
       return {
         value:100,
         location:'武汉',
-        keywordsearch:"",
+        keywordsearch:"公交",
         nearby: {
           center: {
             lng: 114.361675,
@@ -81,5 +82,8 @@
     widht:100%;
     height:600px;
     overflow: hidden;
+  }
+  .BMap_vectex_node{
+    border-radius: 100%;
   }
 </style>

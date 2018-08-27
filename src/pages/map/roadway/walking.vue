@@ -23,15 +23,15 @@
             <i class="fa fa-search" aria-hidden="true"></i>
           </el-button>
         </el-input>
-        <el-input
-          class="input ip3"
-          placeholder="请输入城市"
-          v-model="Local"
-          clearable>
-          <el-button slot="append" @click="handleLocation">
-            <i class="fa fa-search" aria-hidden="true"></i>
-          </el-button>
-        </el-input>
+        <!--<el-input-->
+          <!--class="input ip3"-->
+          <!--placeholder="请输入城市"-->
+          <!--v-model="Local"-->
+          <!--clearable>-->
+          <!--<el-button slot="append" @click="handleLocation">-->
+            <!--<i class="fa fa-search" aria-hidden="true"></i>-->
+          <!--</el-button>-->
+        <!--</el-input>-->
       </div>
     </div>
   </div>
@@ -77,7 +77,6 @@
     float: left;
     width: 20%;
     max-width: 400px;
-    margin-right: 2px;
     transform: translateY(-40px);
   }
   .ip2{

@@ -7,7 +7,14 @@
         <bm-traffic :predictDate="{weekday: 7, hour: 12}">
         </bm-traffic>
         <bm-geolocation anchor="BMAP_ANCHOR_BOTTOM_RIGHT" :showAddressBar="true" :autoLocation="true"></bm-geolocation>
-        <bm-driving  :start=startsearch :end=endsearch :auto-viewport="true" :startCity=startLocalsearch :endCity=endlocalsearch></bm-driving >
+        <bm-driving
+          :start=startsearch
+          :end=endsearch
+          :auto-viewport="true"
+          location="武汉"
+          policy="BMAP_DRIVING_POLICY_LEAST_DISTANCE"
+          :waypoints="[]"
+        ></bm-driving >
       </baidu-map>
       <div class="input-wrapper">
         <el-input

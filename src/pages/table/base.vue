@@ -26,6 +26,7 @@
         border
         @selection-change="on_batch_select">
         <el-table-column
+          :selectable="selectable"
           type="selection"
           width="55">
         </el-table-column>
@@ -95,7 +96,7 @@
             <router-link :to="{name: 'tableUpdate', params: {personid:props.row.personid}}" tag="span">
               <el-button type="info" size="small" icon="edit">修改</el-button>
             </router-link>
-            <el-button type="danger" size="small" icon="delete" @click="delete_data(props.row.personid)">删除</el-button>
+            <el-button v-if="props.row.personid!=get_user_info.user.personid" type="danger" size="small" icon="delete" @click="delete_data(props.row.personid)">删除</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -165,8 +166,19 @@
     created(){
       this.get_table_data()
       this.personid=this.get_user_info.user.personid
+      // console.log(this.get_user_info.user.isadmin)
+      if(!this.get_user_info.user.isadmin){
+        this.$router.replace({path:'/403'})
+      }
     },
     methods: {
+      selectable(row){
+        if(row.personid!=this.get_user_info.user.personid){
+          return true
+        }else{
+          return false
+        }
+      },
       lengthchange(){
         var  val =this.$refs.iplength.value
         if(parseInt(this.$refs.iplength.value)){
@@ -255,7 +267,7 @@
            length: this.length
          }
        }).then((res)=>{
-           console.log(res)
+           // console.log(res)
            this.table_data=res.data.result
            this.page=res.data.page
            this.total = res.data.total-1
@@ -295,13 +307,6 @@
                   message:message,
                 })
               })
-            // this.$fetch.api_table.del(item)
-            //   .then(({msg}) => {
-            //     this.get_table_data()
-            //     this.$message.success(msg)
-            //   })
-            //   .catch(() => {
-            //   })
           })
           .catch(() => {
           })

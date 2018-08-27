@@ -86,9 +86,6 @@
           path: "/map",
           icon: "fa-map",
           child: [{
-            title: "路线导航",
-            path: "/map/road"
-          },{
             title: "热点搜索",
             path: "/map/hot"
           },{
@@ -97,6 +94,9 @@
           },{
             title: "地图查看",
             path: "/map/search"
+          },{
+            title: "路线导航",
+            path: "/map/road"
           }]
         }],
       }

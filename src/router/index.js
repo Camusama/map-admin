@@ -13,6 +13,7 @@ import viewPageComponent from 'pages/App'
 import homeComponent from 'pages/home'
 //404
 import noPageComponent from 'pages/error/404'
+import Forbidden403 from 'pages/error/403'
 //login
 import loginComponent from 'pages/user/login'
 //base table
@@ -60,6 +61,14 @@ const routes = [{
   redirect: '/home',
   component: viewPageComponent,
   children: [{
+    path: '/403',
+    name: 'Forbidden',
+    component: Forbidden403,
+    meta: {
+      title: "无权限",
+      auth: true
+    }
+  }, {
     path: '/home',
     name: 'home',
     component: homeComponent,

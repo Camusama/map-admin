@@ -120,10 +120,10 @@
     },
     methods:{
       on_refreshtips(){
-
+        this.get_tips()
       },
       on_refreshnews(){
-
+        this.get_news()
       },
       get_tips(){
         this.load_data = true

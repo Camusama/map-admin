@@ -4,10 +4,8 @@
       <baidu-map class="maptransit" center="武汉" :zoom="15" :scroll-wheel-zoom="true">
         <bm-city-list anchor="BMAP_ANCHOR_TOP_LEFT"></bm-city-list>
         <bm-scale anchor="BMAP_ANCHOR_TOP_RIGHT"></bm-scale>
-        <bm-traffic :predictDate="{weekday: 7, hour: 12}">
-        </bm-traffic>
         <bm-geolocation anchor="BMAP_ANCHOR_BOTTOM_RIGHT" :showAddressBar="true" :autoLocation="true"></bm-geolocation>
-        <bm-transit  :start=startsearch :end=endsearch :auto-viewport="true" :location=Localsearch></bm-transit >
+        <bm-transit  :start=start1 :end=end1 :auto-viewport="true" :location=Localsearch></bm-transit >
       </baidu-map>
       <div class="input-wrapper">
         <el-input
@@ -25,15 +23,6 @@
             <i class="fa fa-search" aria-hidden="true"></i>
           </el-button>
         </el-input>
-        <el-input
-          class="input ip3"
-          placeholder="请输入城市"
-          v-model="Local"
-          clearable>
-          <el-button slot="append" @click="handleLocation">
-            <i class="fa fa-search" aria-hidden="true"></i>
-          </el-button>
-        </el-input>
       </div>
     </div>
   </div>
@@ -44,8 +33,8 @@
     data(){
       return {
         Localsearch:"武汉",
-        startsearch:"",
-        endsearch:"",
+        start1:"",
+        end1:"",
         startlocal:"",
         endlocal:"",
         Local:""
@@ -58,8 +47,8 @@
     },
     methods:{
       handleSearch(){
-        this.startsearch =this.startlocal
-        this.endsearch = this.endlocal
+        this.start1 =this.startlocal
+        this.end1 = this.endlocal
       },
       handleLocation(){
         this.Localsearch=this.Local
@@ -79,7 +68,6 @@
     float: left;
     width: 20%;
     max-width: 400px;
-    margin-right: 2px;
     transform: translateY(-40px);
   }
   .ip2{

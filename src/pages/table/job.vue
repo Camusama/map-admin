@@ -100,6 +100,8 @@
 <script type="text/javascript">
   import {panelTitle, bottomToolBar} from 'components'
   import axios from 'axios'
+  import {mapGetters} from 'vuex'
+  import {GET_USER_INFO} from 'store/getters/type'
   const url ="/api/jobserver"
   export default{
     data(){
@@ -124,8 +126,16 @@
       panelTitle,
       bottomToolBar,
     },
+    computed:{
+      ...mapGetters({
+        get_user_info: GET_USER_INFO
+      })
+    },
     created(){
       this.get_table_data()
+      if(!this.get_user_info.user.isadmin){
+        this.$router.replace({path:'/403'})
+      }
     },
     methods: {
       lengthchange(){

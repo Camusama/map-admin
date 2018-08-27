@@ -154,6 +154,9 @@
     created(){
       this.get_table_data()
       this.personid=this.get_user_info.user.personid
+      if(!this.get_user_info.user.isadmin){
+        this.$router.replace({path:'/403'})
+      }
     },
     methods: {
       lengthchange(){
