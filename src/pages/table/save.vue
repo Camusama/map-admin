@@ -11,13 +11,16 @@
               <el-input :disabled="flag" type="number" v-model.number="form.personid" placeholder="请输入ID" style="width: 250px;"></el-input>
             </el-form-item>
             <el-form-item label="用户名:" prop="username">
-              <el-input v-model="form.username" placeholder="请输入内容" style="width: 250px;"></el-input>
+              <el-input  v-model="form.username" placeholder="请输入内容" style="width: 250px;" @blur="checkUsername"></el-input>
             </el-form-item>
             <el-form-item label="姓名:" prop="realname">
               <el-input v-model="form.realname" placeholder="请输入内容" style="width: 250px;"></el-input>
             </el-form-item>
-            <el-form-item label="密码:" prop="realname">
-              <el-input v-model="form.password" placeholder="请输入内容" style="width: 250px;"></el-input>
+            <el-form-item label="密码:" prop="password">
+              <el-input type="password" v-model="form.password" placeholder="请输入内容" style="width: 250px;"></el-input>
+            </el-form-item>
+            <el-form-item v-if="!flag" label="确认密码" prop="checkPass">
+              <el-input type="password" v-model="form.checkPass" auto-complete="off" style="width: 250px;"></el-input>
             </el-form-item>
             <el-form-item label="性别:">
               <el-radio-group v-model="form.gender" prop="gender">
@@ -28,7 +31,7 @@
             <el-form-item label="联系方式:" prop="telephone">
               <el-input
                 placeholder="请输入内容"
-                v-model="form.telephone"
+                v-model.number="form.telephone"
                 style="width: 250px;">
               </el-input>
             </el-form-item>
@@ -94,7 +97,42 @@
 
   export default{
     data(){
-      return {
+      var checkUsername = (rule, value, callback) => {
+          if (!value) {
+            return callback(new Error('用户名不能为空'));
+          }
+          setTimeout(() => {
+              if (this.checkuser) {
+                callback(new Error('用户名已存在！'));
+              } else {
+                callback();
+            }
+          }, 1000);
+      };
+      var checkpass = (rule, value, callback) => {
+        if (value === '') {
+          callback(new Error('请再次输入密码'));
+        } else if (value !== this.form.password) {
+          callback(new Error('两次输入密码不一致!'));
+        } else {
+          callback();
+        }
+      };
+      var checkPhone = (rule, value, callback) => {
+          if (!value) {
+            return callback(new Error('手机号不能为空'));
+          } else {
+            const reg = /^1[3|4|5|7|8][0-9]\d{8}$/
+            console.log(reg.test(value));
+            if (reg.test(value)) {
+              callback();
+            } else {
+              return callback(new Error('请输入正确的手机号'));
+            }
+          }
+      };
+          return {
+        checkuser:false,
         flag:true,
         organ_id:null,
         job_id:null,
@@ -103,6 +141,7 @@
           personid:null,
           username:null,
           password:null,
+          checkPass:null,
           realname: null,
           gender: "男",
           telephone: null,
@@ -114,10 +153,12 @@
         load_data: false,
         on_submit_loading: false,
         rules: {
-          username: [{required: true, message: '用户名不能为空', trigger: 'blur'}],
+          username: [ {required: true, validator: checkUsername, trigger: 'blur' }],
+          checkPass:[ {required: true, validator: checkpass, trigger: 'blur' }],
           password: [{required: true, message: '密码不能为空', trigger: 'blur'}],
           realname: [{required: true, message: '姓名不能为空', trigger: 'blur'}],
           gender: [{required: true, message: '性别不能为空', trigger: 'blur'}],
+          telephone:[ {required: true, validator: checkPhone, trigger: 'blur' }],
           jobid: [{type:"number",required: true, message: '请选择岗位', trigger: 'blur'}],
           email: [{type:"email",required: true, message: '请输入正确邮箱!', trigger: 'blur'}],
           // telephone: [{required: true, message: '电话号码不能为空', trigger: 'blur'}],
@@ -138,6 +179,16 @@
       this.type=this.flag?"number":""
     },
     methods: {
+      checkUsername(){
+        axios.get(url,{
+          params:{
+            method:"checkUsername",
+            username:this.form.username
+          }
+        }).then((res)=>{
+          this.checkuser=res.data
+        })
+      },
       //获取数据
       get_form_data(){
         this.load_data = true
